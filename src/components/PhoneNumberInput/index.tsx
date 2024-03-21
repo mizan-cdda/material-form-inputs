@@ -1,14 +1,38 @@
 import React from "react";
 import { MuiTelInput } from "mui-tel-input";
+import { FormControl, FormHelperText } from "@mui/material";
 
-const PhoneNumberInput = () => {
-  const [value, setValue] = React.useState("");
+const PhoneNumberInput = ({
+  formik,
+  id,
+  name,
+  label,
+  variant,
+}: {
+  formik: any;
 
-  const handleChange = (newValue: any) => {
-    setValue(newValue);
-  };
-
-  return <MuiTelInput value={value} onChange={handleChange} />;
+  id: string;
+  name: string;
+  label: string;
+  variant: string;
+}) => {
+  return (
+    <FormControl
+      fullWidth
+      error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
+    >
+      <MuiTelInput
+        name={name}
+        label={label}
+        value={formik.values?.[name]}
+        onChange={(phone) => formik.setFieldValue(name, phone)}
+        error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
+      />
+      <FormHelperText>
+        {formik.touched?.[name] && formik.errors?.[name]}
+      </FormHelperText>
+    </FormControl>
+  );
 };
 
 export default PhoneNumberInput;

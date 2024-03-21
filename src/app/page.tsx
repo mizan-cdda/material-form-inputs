@@ -1,7 +1,5 @@
 "use client";
-import MultiSelect from "@/components/MultiSelet";
 import styles from "./page.module.css";
-import CustomTextInput from "@/components/CustomTextInput";
 import {
   Box,
   Button,
@@ -20,13 +18,21 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { ErrorMessage, Field, useFormik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import OTPInput from "@/components/OTP";
-import ClassicSignUpPage from "@/components/SingleSignUp";
 import AutoCompleteField from "@/components/AutoComplete";
-import PhoneNumberInput from "@/components/PhoneNumberInput";
 import { MuiTelInput } from "mui-tel-input";
+import TransferList from "@/components/TransferList";
+import Text from "@/components/Text";
+import TextArea from "@/components/TextArea";
+import MultiSelect from "@/components/MultiSelect";
+import RadioInput from "@/components/Radio";
+import CheckboxGroup from "@/components/CheckBoxGroup";
+import DecimalNumber from "@/components/DecimalNumber";
+import ThousandDividerInput from "@/components/ThousandDividerInput";
+import PhoneNumberInput from "@/components/PhoneNumberInput";
+import CustomFile from "@/components/CustomFile/index2";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -56,7 +62,10 @@ const validationSchema = Yup.object({
       (value: any) => (value === null ? true : /^\d+(\.\d{1,2})?$/.test(value))
     ),
   files: Yup.array().required("Files are required"),
-  phoneInput: Yup.string().required("Phone number is required"),
+  phoneInput: Yup.string()
+    .required("Phone number is required")
+    .min(10, "Phone number must be at least 10 digits"),
+  message: Yup.string().required("Message is required"),
 });
 
 export default function Home() {
@@ -72,6 +81,8 @@ export default function Home() {
       numberWithCommas: "", // Initialize as a string
       files: [],
       phoneInput: "",
+      message: "",
+      content: "",
     },
     validationSchema,
     onSubmit: async (values: any) => {
@@ -80,187 +91,107 @@ export default function Home() {
     enableReinitialize: true,
   });
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target as HTMLInputElement;
-    const { checkedItems } = formik.values;
-    const currentIndex = checkedItems.indexOf(value as never); // Add type annotation
-    const newCheckedItems = [...checkedItems];
-
-    if (currentIndex === -1) {
-      newCheckedItems.push(value as never);
-    } else {
-      newCheckedItems.splice(currentIndex, 1);
-    }
-
-    formik.setFieldValue("checkedItems", newCheckedItems);
-  };
-
-  const formatNumber = (value: any) => {
-    // Remove non-numeric characters
-    const numericValue = value.replace(/\D/g, "");
-    // Add commas for thousands
-    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const handleChange = (event: any) => {
-    const { value, name } = event.target;
-    const formattedValue = formatNumber(value);
-    // Update the formik values with the formatted value
-    formik.setFieldValue(name, formattedValue);
-  };
-
-  const handleFileChange = (event: any) => {
-    const files = Array.from(event.target.files);
-    formik.setFieldValue("files", files);
-  };
   return (
     <main className={styles.main}>
       <form
         onSubmit={formik.handleSubmit}
         style={{ display: "flex", flexDirection: "column", gap: "15px" }}
       >
-        <TextField
-          required
-          defaultValue="Hello World"
-          fullWidth
-          id="email"
-          name="email"
+        {/* Custom text input */}
+        <Text
+          type="text"
+          animation={true}
+          formik={formik}
+          id="Email"
           label="Email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
+          name="email"
+          variant="outlined"
         />
-        <TextField
-          id="standard-number"
+        <Text
+          type="number"
           name="number"
           label="Number"
-          type="text"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          variant="standard"
-          value={formik.values.number}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.number && Boolean(formik.errors.number)}
-          helperText={formik.touched.email && formik.errors.number}
+          id="number"
+          formik={formik}
+          variant="outlined"
+          animation={false}
         />
+
+        {/* Custom text area input */}
+        <TextArea
+          formik={formik}
+          id="message"
+          label="Message"
+          name="message"
+          rows={6}
+          variant="outlined"
+        />
+
         {/* Multi select */}
-        <FormControl
-          fullWidth
-          error={
-            formik.touched.selectedOptions &&
-            Boolean(formik.errors.selectedOptions)
-          }
-        >
-          <InputLabel id="selectedOptions-label">Select Options</InputLabel>
-          <Select
-            labelId="selectedOptions-label"
-            id="selectedOptions"
-            name="selectedOptions"
-            multiple
-            input={<OutlinedInput label="Name" />}
-            MenuProps={MenuProps}
-            value={formik.values.selectedOptions}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            renderValue={(selected) => selected.join(", ")}
-          >
-            <MenuItem value="Option 1">Option 1</MenuItem>
-            <MenuItem value="Option 2">Option 2</MenuItem>
-            <MenuItem value="Option 3">Option 3</MenuItem>
-          </Select>
-          <FormHelperText>
-            {formik.touched.selectedOptions && formik.errors.selectedOptions}
-          </FormHelperText>
-        </FormControl>
+        <MultiSelect
+          formik={formik}
+          name="selectedOptions"
+          id="selectedOptions"
+          multiple
+        />
 
         {/* Radio group */}
-        <FormControl
-          error={formik.touched.radioValue && Boolean(formik.errors.radioValue)}
-        >
-          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="radioValue"
-            value={formik.values.radioValue}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          >
-            <FormControlLabel
-              value="female"
-              control={<Radio />}
-              label="Female"
-            />
-            <FormControlLabel value="male" control={<Radio />} label="Male" />
-            <FormControlLabel value="other" control={<Radio />} label="Other" />
-            <FormControlLabel
-              value="disabled"
-              disabled
-              control={<Radio />}
-              label="other"
-            />
-          </RadioGroup>
-          <FormHelperText>
-            {formik.touched.radioValue && formik.errors.radioValue}
-          </FormHelperText>
-        </FormControl>
+        <RadioInput
+          formik={formik}
+          name="radioValue"
+          label="Radio Group"
+          options={[
+            {
+              value: "female",
+              label: "Female",
+              disabled: false,
+            },
+            {
+              value: "male",
+              label: "Male",
+              disabled: false,
+            },
+            {
+              value: "other",
+              label: "Other",
+              disabled: false,
+            },
+            {
+              value: "disabled",
+              label: "Other",
+              disabled: true,
+            },
+          ]}
+          row={true}
+        />
 
         {/* check box group */}
-        <FormControl
-          error={
-            formik.touched.checkedItems && Boolean(formik.errors.checkedItems)
-          }
-        >
-          {/* check box */}
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formik.values.checkedItems.includes(
-                    "checkbox1" as never
-                  )}
-                  onChange={handleCheckboxChange}
-                  value="checkbox1"
-                />
-              }
-              label="Checkbox 1"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formik.values.checkedItems.includes(
-                    "checkbox2" as never
-                  )}
-                  onChange={handleCheckboxChange}
-                  value="checkbox2"
-                />
-              }
-              label="Checkbox 2"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formik.values.checkedItems.includes(
-                    "checkbox3" as never
-                  )}
-                  onChange={handleCheckboxChange}
-                  value="checkbox3"
-                />
-              }
-              label="Checkbox 3"
-            />
-          </FormGroup>
-          <FormHelperText>
-            {formik.touched.checkedItems && formik.errors.checkedItems}
-          </FormHelperText>
-        </FormControl>
+        <CheckboxGroup
+          formik={formik}
+          name="checkedItems"
+          label="Checkbox Group"
+          options={[
+            {
+              value: "checkbox1",
+              label: "Checkbox 1",
+              disabled: false,
+            },
+            {
+              value: "checkbox2",
+              label: "Checkbox 2",
+              disabled: false,
+            },
+            {
+              value: "checkbox3",
+              label: "Checkbox 3",
+              disabled: false,
+            },
+          ]}
+          row={true}
+        />
 
         {/* Float Number */}
-        <TextField
+        {/* <TextField
           fullWidth
           id="floatNumber"
           name="floatNumber"
@@ -280,92 +211,44 @@ export default function Home() {
           inputProps={{
             step: "any", // Set the step to control float precision
           }}
-        />
+        /> */}
 
         {/* Decimal number input */}
-        <TextField
-          fullWidth
+        <DecimalNumber
+          formik={formik}
           id="decimalNumber"
           name="decimalNumber"
           label="Decimal Number"
-          type="text" // Set the type to 'text'
-          InputLabelProps={{
-            shrink: true,
-          }}
-          variant="standard"
-          value={formik.values.decimalNumber}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={
-            formik.touched.decimalNumber && Boolean(formik.errors.decimalNumber)
-          }
-          helperText={
-            formik.touched.decimalNumber && formik.errors.decimalNumber
-          }
-          inputProps={{
-            inputMode: "decimal",
-            pattern: "[0-9]*[.,]?[0-9]*", // Pattern to allow digits, dot, or comma
-          }}
+          variant="outlined"
         />
 
         {/* Number with comma */}
-        <TextField
-          fullWidth
+        <ThousandDividerInput
+          formik={formik}
           id="numberWithCommas"
           name="numberWithCommas"
           label="Number with Commas"
-          type="text" // Set the type to 'text'
-          InputLabelProps={{
-            shrink: true,
-          }}
+          rows={1}
           variant="outlined"
-          value={formik.values.numberWithCommas}
-          onChange={handleChange} // Custom change handler
-          onBlur={formik.handleBlur}
-          error={
-            formik.touched.numberWithCommas &&
-            Boolean(formik.errors.numberWithCommas)
-          }
-          helperText={
-            formik.touched.numberWithCommas && formik.errors.numberWithCommas
-          }
         />
 
         {/* FIle upload */}
-        <FormControl
-          fullWidth
-          error={formik.touched.files && Boolean(formik.errors.files)}
-        >
-          {/* <InputLabel htmlFor="file-upload">Select Files</InputLabel> */}
-          <Input
-            id="file-upload"
-            type="file"
-            name="files"
-            onChange={handleFileChange}
-            inputProps={{ accept: ".pdf,.doc,.docx" }} // Specify accepted file types
-          />
-          <FormHelperText>
-            {formik.touched.files && formik.errors.files}
-          </FormHelperText>
-        </FormControl>
+        <CustomFile
+          formik={formik}
+          id="file-upload"
+          name="files"
+          label="Select Files"
+          variant="outlined"
+        />
 
-        <FormControl
-          fullWidth
-          error={formik.touched.phoneInput && Boolean(formik.errors.phoneInput)}
-        >
-          <MuiTelInput
-            name="phoneInput"
-            label="Phone Number"
-            value={formik.values.phoneInput}
-            onChange={(phone) => formik.setFieldValue("phoneInput", phone)}
-            error={
-              formik.touched.phoneInput && Boolean(formik.errors.phoneInput)
-            }
-          />
-          <FormHelperText>
-            {formik.touched.phoneInput && formik.errors.phoneInput}
-          </FormHelperText>
-        </FormControl>
+        {/* Phone number input */}
+        <PhoneNumberInput
+          formik={formik}
+          id="phoneInput"
+          name="phoneInput"
+          label="Phone Number"
+          variant="outlined"
+        />
 
         <Button
           sx={{ mt: 3 }}
@@ -381,12 +264,12 @@ export default function Home() {
       <OTPInput />
 
       {/* Custom auto complete input */}
-      <h2>Hello World!</h2>
+      <h2>Auto complete field</h2>
       <AutoCompleteField />
 
-      {/* Phone number input */}
-      <h2>Phone Number Input</h2>
-      <PhoneNumberInput />
+      {/* Transfer list */}
+      <h2>Transfer list</h2>
+      <TransferList />
     </main>
   );
 }
