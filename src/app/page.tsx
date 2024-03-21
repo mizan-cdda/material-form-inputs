@@ -25,6 +25,8 @@ import * as Yup from "yup";
 import OTPInput from "@/components/OTP";
 import ClassicSignUpPage from "@/components/SingleSignUp";
 import AutoCompleteField from "@/components/AutoComplete";
+import PhoneNumberInput from "@/components/PhoneNumberInput";
+import { MuiTelInput } from "mui-tel-input";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -54,6 +56,7 @@ const validationSchema = Yup.object({
       (value: any) => (value === null ? true : /^\d+(\.\d{1,2})?$/.test(value))
     ),
   files: Yup.array().required("Files are required"),
+  phoneInput: Yup.string().required("Phone number is required"),
 });
 
 export default function Home() {
@@ -68,6 +71,7 @@ export default function Home() {
       decimalNumber: "",
       numberWithCommas: "", // Initialize as a string
       files: [],
+      phoneInput: "",
     },
     validationSchema,
     onSubmit: async (values: any) => {
@@ -345,6 +349,24 @@ export default function Home() {
           </FormHelperText>
         </FormControl>
 
+        <FormControl
+          fullWidth
+          error={formik.touched.phoneInput && Boolean(formik.errors.phoneInput)}
+        >
+          <MuiTelInput
+            name="phoneInput"
+            label="Phone Number"
+            value={formik.values.phoneInput}
+            onChange={(phone) => formik.setFieldValue("phoneInput", phone)}
+            error={
+              formik.touched.phoneInput && Boolean(formik.errors.phoneInput)
+            }
+          />
+          <FormHelperText>
+            {formik.touched.phoneInput && formik.errors.phoneInput}
+          </FormHelperText>
+        </FormControl>
+
         <Button
           sx={{ mt: 3 }}
           type="submit"
@@ -361,6 +383,10 @@ export default function Home() {
       {/* Custom auto complete input */}
       <h2>Hello World!</h2>
       <AutoCompleteField />
+
+      {/* Phone number input */}
+      <h2>Phone Number Input</h2>
+      <PhoneNumberInput />
     </main>
   );
 }
