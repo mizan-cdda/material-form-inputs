@@ -28,7 +28,6 @@ const Text = ({
     <TextField
       rows={rows}
       multiline={multiline}
-      required
       defaultValue="Hello World"
       fullWidth
       id={id}

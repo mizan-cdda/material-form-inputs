@@ -8,6 +8,7 @@ const CustomFile = ({
   label,
   variant,
   accept = ".pdf,.doc,.docx",
+  multiple = false,
 }: {
   formik: any;
 
@@ -16,6 +17,7 @@ const CustomFile = ({
   label: string;
   variant: string;
   accept?: string;
+  multiple?: boolean;
 }) => {
   const [filesArr, setFilesArr] = useState([]);
   const handleFileChange = (event: any) => {
@@ -37,12 +39,12 @@ const CustomFile = ({
         type="file"
         name={name}
         onChange={handleFileChange}
-        inputProps={{ accept: ".pdf,.doc,.docx" }} // Specify accepted file types
+        inputProps={{ accept }} // Specify accepted file types
       />
       <FormHelperText>
         {formik.touched?.[name] && formik.errors?.[name]}
       </FormHelperText>
-      {files?.map((file: any, index: number) => {
+      {filesArr?.map((file: any, index: number) => {
         console.log(file);
         return (
           <div key={index}>

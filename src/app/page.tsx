@@ -18,11 +18,11 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useFormik } from "formik";
+import { ErrorMessage, Field, useFormik } from "formik";
 import * as Yup from "yup";
 import OTPInput from "@/components/OTP";
 import AutoCompleteField from "@/components/AutoComplete";
-import { MuiTelInput } from "mui-tel-input";
+import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
 import TransferList from "@/components/TransferList";
 import Text from "@/components/Text";
 import TextArea from "@/components/TextArea";
@@ -45,6 +45,22 @@ const MenuProps = {
   },
 };
 
+const matchIsValidTelCustom = (phoneNumber: string) => {
+  // If phoneNumber is not a string or is empty, return false
+  if (typeof phoneNumber !== "string" || phoneNumber.trim() === "") {
+    return false;
+  }
+
+  // Implement your custom verification logic here
+  // For demonstration, let's assume the phoneNumber is valid if it contains at least 5 characters
+  return matchIsValidTel(phoneNumber, {
+    onlyCountryies: [], // optional,
+    excludedCountryies: [], // optional
+    continents: [], // optional
+  });
+  // return phoneNumber.length >= 5;
+};
+
 const validationSchema = Yup.object({
   email: Yup.string()
     .email("Enter a valid email")
@@ -62,9 +78,13 @@ const validationSchema = Yup.object({
       (value: any) => (value === null ? true : /^\d+(\.\d{1,2})?$/.test(value))
     ),
   files: Yup.array().required("Files are required"),
-  phoneInput: Yup.string()
-    .required("Phone number is required")
-    .min(10, "Phone number must be at least 10 digits"),
+  phoneInput: Yup.string().test(
+    "isValidPhoneNumber",
+    `Phone number is not valid`,
+    (value: any) => {
+      return matchIsValidTelCustom(value);
+    }
+  ),
   message: Yup.string().required("Message is required"),
 });
 
@@ -90,6 +110,11 @@ export default function Home() {
     },
     enableReinitialize: true,
   });
+
+  const handleFileChange = (event: any) => {
+    const files = Array.from(event.target.files);
+    formik.setFieldValue("files", files);
+  };
 
   return (
     <main className={styles.main}>
@@ -233,6 +258,22 @@ export default function Home() {
         />
 
         {/* FIle upload */}
+        {/* <FormControl
+          fullWidth
+          error={formik.touched.files && Boolean(formik.errors.files)}
+        >
+          <InputLabel htmlFor="file-upload">Select Files</InputLabel>
+          <Input
+            id="file-upload"
+            type="file"
+            name="files"
+            onChange={handleFileChange}
+            inputProps={{ accept: ".pdf,.doc,.docx" }} // Specify accepted file types
+          />
+          <FormHelperText>
+            {formik.touched.files && formik.errors.files}
+          </FormHelperText>
+        </FormControl> */}
         <CustomFile
           formik={formik}
           id="file-upload"
@@ -249,6 +290,56 @@ export default function Home() {
           label="Phone Number"
           variant="outlined"
         />
+
+        {/* <div>
+          <PhoneNumberInput
+            label="Phone Number"
+            value={formik.values.phoneNumber}
+            onChange={formik.handleChange("phoneNumber")}
+            onBlur={formik.handleBlur("phoneNumber")}
+            error={formik.touched.phoneNumber && formik.errors.phoneNumber}
+          />
+          {formik.touched.phoneNumber && formik.errors.phoneNumber && (
+            <Box sx={{ color: "red" }}>{String(formik.errors.phoneNumber)}</Box>
+          )}
+        </div> */}
+
+        {/* Rich text editor */}
+        {/* <>
+          <FormControl
+            fullWidth
+            error={formik.touched.content && Boolean(formik.errors.content)}
+            sx={{
+              border:
+                formik.touched.content && formik.errors.content
+                  ? "1px solid #f44336"
+                  : "1px solid transparent",
+              borderRadius: "4px",
+            }}
+          >
+            <RichTextEditor
+              name="content"
+              ref={rteRef}
+              extensions={[StarterKit]}
+              content={formik.values.content}
+              onChange={(content) => {
+                console.log("content", content);
+                formik.setFieldValue("content", content);
+              }}
+              renderControls={() => (
+                <MenuControlsContainer>
+                  <MenuSelectHeading />
+                  <MenuDivider />
+                  <MenuButtonBold />
+                  <MenuButtonItalic />
+                </MenuControlsContainer>
+              )}
+            />
+          </FormControl>
+          <FormHelperText style={{ color: "#f44336" }}>
+            {formik.touched.content && formik.errors.content}
+          </FormHelperText>
+        </> */}
 
         <Button
           sx={{ mt: 3 }}
