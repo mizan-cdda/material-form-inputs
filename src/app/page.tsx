@@ -147,7 +147,25 @@ export default function Home() {
           formik={formik}
           name="selectedOptions"
           id="selectedOptions"
+          label="Multiple"
           multiple
+          options={[
+            {
+              value: "option1",
+              label: "Option 1",
+              disabled: false,
+            },
+            {
+              value: "option2",
+              label: "Option 2",
+              disabled: false,
+            },
+            {
+              value: "option3",
+              label: "Option 3",
+              disabled: false,
+            },
+          ]}
         />
 
         {/* Radio group */}

@@ -24,11 +24,15 @@ const MultiSelect = ({
   name,
   multiple = true,
   id,
+  label = "Multiple",
+  options,
 }: {
   formik: any;
   name: string;
   multiple?: boolean;
   id: string;
+  label: string;
+  options: any[];
 }) => {
   return (
     <FormControl
@@ -37,22 +41,29 @@ const MultiSelect = ({
         formik.touched.selectedOptions && Boolean(formik.errors.selectedOptions)
       }
     >
-      <InputLabel id="selectedOptions-label">Select Options</InputLabel>
+      <InputLabel
+        id="demo-simple-select-disabled-label"
+
+      >
+        {label}
+      </InputLabel>
       <Select
-        labelId="selectedOptions-label"
+        labelId="demo-simple-select-disabled-label"
         id={id}
         name={name}
         multiple={multiple}
         input={<OutlinedInput label="Name" />}
-        MenuProps={MenuProps}
+        // MenuProps={MenuProps}
         value={formik.values.selectedOptions}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         renderValue={(selected) => selected.join(", ")}
       >
-        <MenuItem value="Option 1">Option 1</MenuItem>
-        <MenuItem value="Option 2">Option 2</MenuItem>
-        <MenuItem value="Option 3">Option 3</MenuItem>
+        {options.map((option, index) => (
+          <MenuItem key={index} value={option?.value || option}>
+            {option?.label || option}
+          </MenuItem>
+        ))}
       </Select>
       <FormHelperText>
         {formik.touched.selectedOptions && formik.errors.selectedOptions}
