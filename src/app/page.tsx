@@ -33,6 +33,7 @@ import DecimalNumber from "@/components/DecimalNumber";
 import ThousandDividerInput from "@/components/ThousandDividerInput";
 import PhoneNumberInput from "@/components/PhoneNumberInput";
 import CustomFile from "@/components/CustomFile/index2";
+import FloatNumber from "@/components/FloatNumber";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -54,9 +55,8 @@ const matchIsValidTelCustom = (phoneNumber: string) => {
   // Implement your custom verification logic here
   // For demonstration, let's assume the phoneNumber is valid if it contains at least 5 characters
   return matchIsValidTel(phoneNumber, {
-    onlyCountryies: [], // optional,
-    excludedCountryies: [], // optional
-    continents: [], // optional
+    onlyCountries: ["BD", "US"], // optional,
+    continents: ["AS", "NA"], // optional
   });
   // return phoneNumber.length >= 5;
 };
@@ -77,6 +77,23 @@ const validationSchema = Yup.object({
       "Please enter a valid decimal number with two decimal places",
       (value: any) => (value === null ? true : /^\d+(\.\d{1,2})?$/.test(value))
     ),
+  floatNumber: Yup.string()
+    .typeError("Please enter a valid number")
+    .required("Required")
+    .test(
+      "is-decimal",
+      "Please enter a valid decimal number with two decimal places",
+      (value: any) => (value === null ? true : /[0-9]+\.[0-9]+$/.test(value))
+    ),
+  // floatNumber: Yup.string()
+  //   .typeError("Please enter a valid number")
+  //   .required("Required")
+  //   .test("is-float", "Please enter a valid float number", (value: any) =>
+  //     value === null ? true : /^\d+(\.\d+)?$/.test(value)
+  //   ),
+  // floatNumber: Yup.string()
+  //   .matches(/^[-+][0-9]+\.[0-9]+[eE][-+]?[0-9]+$/, "Must be a valid float number")
+  //   .required("Required"),
   files: Yup.array().required("Files are required"),
   phoneInput: Yup.string().test(
     "isValidPhoneNumber",
@@ -215,28 +232,14 @@ export default function Home() {
           row={true}
         />
 
-        {/* Float Number */}
-        {/* <TextField
-          fullWidth
+        {/* Float number input */}
+        <FloatNumber
+          formik={formik}
           id="floatNumber"
           name="floatNumber"
           label="Float Number"
-          type="number" // Set the type to 'number'
-          InputLabelProps={{
-            shrink: true,
-          }}
-          variant="standard"
-          value={formik.values.floatNumber}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={
-            formik.touched.floatNumber && Boolean(formik.errors.floatNumber)
-          }
-          helperText={formik.touched.floatNumber && formik.errors.floatNumber}
-          inputProps={{
-            step: "any", // Set the step to control float precision
-          }}
-        /> */}
+          variant="outlined"
+        />
 
         {/* Decimal number input */}
         <DecimalNumber

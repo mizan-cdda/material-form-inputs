@@ -31,7 +31,7 @@ const Text = ({
       defaultValue="Hello World"
       fullWidth
       id={id}
-      variant={variant ? variant : ("outlined" as TextFieldVariants)}
+      variant={variant ? variant as TextFieldVariants : "outlined"}
       // InputLabelProps={{
       //     shrink: animation && formik.values.email ? true : false,
       // }}

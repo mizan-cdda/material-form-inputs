@@ -7,7 +7,6 @@ const PhoneNumberInput = ({
   id,
   name,
   label,
-  variant,
 }: {
   formik: any;
 
@@ -23,11 +22,14 @@ const PhoneNumberInput = ({
     >
       <MuiTelInput
         name={name}
+        id={id}
         label={label}
         value={formik.values?.[name]}
         onChange={(phone) => formik.setFieldValue(name, phone)}
-        // onChange={handleChange}
         error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
+        forceCallingCode
+        onlyCountries={["BD", "US"]}
+        defaultCountry="BD"
       />
       <FormHelperText>
         {formik.touched?.[name] && formik.errors?.[name]}
