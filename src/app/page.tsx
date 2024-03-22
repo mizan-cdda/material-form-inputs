@@ -1,28 +1,11 @@
 "use client";
 import styles from "./page.module.css";
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  Input,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  Radio,
-  RadioGroup,
-  Select,
-  TextField,
-} from "@mui/material";
-import { ErrorMessage, Field, useFormik } from "formik";
+import { Button } from "@mui/material";
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import OTPInput from "@/components/OTP";
 import AutoCompleteField from "@/components/AutoComplete";
-import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
+import { matchIsValidTel } from "mui-tel-input";
 import TransferList from "@/components/TransferList";
 import Text from "@/components/Text";
 import TextArea from "@/components/TextArea";
@@ -34,17 +17,6 @@ import ThousandDividerInput from "@/components/ThousandDividerInput";
 import PhoneNumberInput from "@/components/PhoneNumberInput";
 import CustomFile from "@/components/CustomFile/index2";
 import FloatNumber from "@/components/FloatNumber";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 const matchIsValidTelCustom = (phoneNumber: string) => {
   // If phoneNumber is not a string or is empty, return false
@@ -79,7 +51,7 @@ const validationSchema = Yup.object({
     ),
   floatNumber: Yup.string()
     .typeError("Please enter a valid number")
-    .required("Required")
+    .required("Required Float Number")
     .test(
       "is-decimal",
       "Please enter a valid decimal number with two decimal places",
@@ -94,7 +66,7 @@ const validationSchema = Yup.object({
   // floatNumber: Yup.string()
   //   .matches(/^[-+][0-9]+\.[0-9]+[eE][-+]?[0-9]+$/, "Must be a valid float number")
   //   .required("Required"),
-  files: Yup.array().required("Files are required"),
+  files: Yup.array().min(1, "Select at least one file"),
   phoneInput: Yup.string().test(
     "isValidPhoneNumber",
     `Phone number is not valid`,
@@ -119,7 +91,6 @@ export default function Home() {
       files: [],
       phoneInput: "",
       message: "",
-      content: "",
     },
     validationSchema,
     onSubmit: async (values: any) => {
@@ -149,6 +120,8 @@ export default function Home() {
           name="email"
           variant="outlined"
         />
+
+        {/* Number input */}
         <Text
           type="number"
           name="number"
@@ -283,6 +256,7 @@ export default function Home() {
           name="files"
           label="Select Files"
           variant="outlined"
+          accept="image/*,.pdf,.doc,.docx"
         />
 
         {/* Phone number input */}
@@ -347,6 +321,7 @@ export default function Home() {
         <Button
           sx={{ mt: 3 }}
           type="submit"
+          variant="contained"
           // disabled={waiting}
         >
           {/* {!waiting ? 'Save' : 'Saving...'} */}
