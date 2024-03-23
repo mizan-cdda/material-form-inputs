@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Box, Button, TextField } from "@mui/material";
@@ -25,6 +25,10 @@ const OTPForm = () => {
     console.log("Valid OTP:", otp);
     actions.setSubmitting(false);
   };
+  //  refer changes
+  const inputRefs = useRef<Array<HTMLInputElement | null>>(
+    Array.from({ length: 5 }, () => null)
+  );
 
   return (
     <Formik
@@ -53,16 +57,25 @@ const OTPForm = () => {
                     variant="outlined"
                     margin="normal"
                     fullWidth
+                    inputRef={(el) => (inputRefs.current[index] = el)}
                     onChange={(e) => {
                       const numericValue = e.target.value.replace(/\D/g, "");
 
                       // Update the formik values with the formatted value
                       field.onChange({
-                        target: { // Simulate the event object
+                        target: {
+                          // Simulate the event object
                           value: numericValue,
                           name: field.name,
                         },
                       });
+
+                      if (
+                        numericValue.length === 1 &&
+                        index < inputRefs.current.length - 1
+                      ) {
+                        inputRefs?.current[index + 1]?.focus();
+                      }
                     }}
                     InputLabelProps={{
                       shrink: true,
@@ -71,6 +84,8 @@ const OTPForm = () => {
                       inputMode: "numeric",
                       pattern: "[0-9]*",
                       maxLength: 1,
+
+                      autoComplete: "off",
                     }}
                     error={
                       field.touched?.[`otp[${index}]`] &&
@@ -83,7 +98,6 @@ const OTPForm = () => {
               />
             ))}
           </Box>
-          {/* <ErrorMessage name="otp" component="div" /> */}
           <Button
             sx={{
               marginTop: "1rem",
