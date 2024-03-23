@@ -1,6 +1,8 @@
 import * as React from "react";
 import { Input as BaseInput } from "@mui/base/Input";
 import { Box, styled } from "@mui/system";
+import { Button, FormHelperText } from "@mui/material";
+import * as Yup from "yup";
 
 function OTP({
   separator,
@@ -180,8 +182,31 @@ function OTP({
   );
 }
 
+const validationSchema = Yup.object().shape({
+  otp: Yup.string()
+    .matches(/^\d{5}$/, "OTP must be exactly 5 digits")
+    .required("OTP is required"),
+});
+
 export default function OTPInput() {
   const [otp, setOtp] = React.useState("");
+  const [errors, setErrors] = React.useState({ otp: "" });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    validationSchema
+      .validate({ otp }, { abortEarly: false })
+      .then(() => {
+        console.log(otp); // Handle submission logic here
+        setErrors({ otp: "" }); // Clear any previous errors
+      })
+      .catch((error) => {
+        const otpError = error.inner.find((e) => e.path === "otp");
+        if (otpError) {
+          setErrors({ otp: otpError.message });
+        }
+      });
+  };
 
   return (
     <Box
@@ -191,13 +216,30 @@ export default function OTPInput() {
         gap: 2,
       }}
     >
-      <OTP
-        separator={<span>-</span>}
-        value={otp}
-        onChange={setOtp}
-        length={5}
-      />
-      <span>Entered value: {otp}</span>
+      <form onSubmit={handleSubmit}>
+        <OTP
+          separator={<span>-</span>}
+          value={otp}
+          onChange={setOtp}
+          length={5}
+        />
+        <FormHelperText
+          style={{
+            color: "red",
+            fontSize: "0.75rem",
+            fontWeight: 400,
+            lineHeight: 1.66,
+            letterSpacing: "0.03333em",
+            textAlign: "left",
+            marginTop: "8px",
+          }}
+        >
+          {errors.otp && <div>{errors.otp}</div>}
+        </FormHelperText>
+        <Button variant="outlined" type="submit">
+          <span>Submit</span>
+        </Button>
+      </form>
     </Box>
   );
 }

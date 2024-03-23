@@ -346,17 +346,6 @@ export default function Home() {
           Save
         </Button>
       </form>
-
-      {/* Otp input */}
-      <OTPInput />
-
-      {/* Custom auto complete input */}
-      <h2>Auto complete field</h2>
-      <AutoCompleteField />
-
-      {/* Transfer list */}
-      <h2>Transfer list</h2>
-      <TransferList />
     </main>
   );
 }
