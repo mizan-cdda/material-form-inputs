@@ -13,7 +13,7 @@ export default function RootLayout({
   const pathname = usePathname();
   const pages = [
     {
-      title: "Home",
+      title: "Form",
       href: "/",
     },
     {

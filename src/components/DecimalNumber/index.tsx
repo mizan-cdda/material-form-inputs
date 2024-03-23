@@ -22,13 +22,6 @@ const DecimalNumber = ({
     return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  // const handleChange = (event: any) => {
-  //   const { value, name } = event.target;
-  //   const formattedValue = formatNumber(value);
-  //   // Update the formik values with the formatted value
-  //   formik.setFieldValue(name, formattedValue);
-  // };
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     // Regex to match decimal number

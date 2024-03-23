@@ -22,13 +22,13 @@ const OTPForm = () => {
 
   const handleSubmit = (values: any, actions: any) => {
     const otp = values.otp.join("");
-    console.log("Valid OTP:", otp);
     actions.setSubmitting(false);
+    if(otp){
+        alert(`OTP submitted: ${otp}`);
+    }
   };
   //  refer changes
-  const inputRefs = useRef<Array<HTMLInputElement | null>>(
-    Array.from({ length: 5 }, () => null)
-  );
+  const inputRefs = useRef<Array<HTMLInputElement | null>>(Array.from({ length: 5 }, () => null));;
 
   return (
     <Formik

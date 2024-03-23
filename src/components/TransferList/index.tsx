@@ -66,6 +66,16 @@ export default function TransferList() {
     setChecked(not(checked, rightChecked));
   };
 
+  const handleAllRight = () => {
+    setRight(right.concat(left));
+    setLeft([]);
+  };
+
+  const handleAllLeft = () => {
+    setLeft(left.concat(right));
+    setRight([]);
+  };
+
   const customList = (title: React.ReactNode, items: readonly number[]) => (
     <Card>
       <CardHeader
@@ -137,6 +147,16 @@ export default function TransferList() {
             sx={{ my: 0.5 }}
             variant="outlined"
             size="small"
+            onClick={handleAllRight}
+            disabled={left.length === 0}
+            aria-label="move all right"
+          >
+            ≫
+          </Button>
+          <Button
+            sx={{ my: 0.5 }}
+            variant="outlined"
+            size="small"
             onClick={handleCheckedRight}
             disabled={leftChecked.length === 0}
             aria-label="move selected right"
@@ -152,6 +172,16 @@ export default function TransferList() {
             aria-label="move selected left"
           >
             &lt;
+          </Button>
+          <Button
+            sx={{ my: 0.5 }}
+            variant="outlined"
+            size="small"
+            onClick={handleAllLeft}
+            disabled={right.length === 0}
+            aria-label="move all left"
+          >
+            ≪
           </Button>
         </Grid>
       </Grid>
