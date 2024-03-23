@@ -3,20 +3,19 @@ import styles from "./page.module.css";
 import { Button } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import OTPInput from "@/components/OTP";
-import AutoCompleteField from "@/components/AutoComplete";
 import { matchIsValidTel } from "mui-tel-input";
-import TransferList from "@/components/TransferList";
-import Text from "@/components/Text";
-import TextArea from "@/components/TextArea";
-import MultiSelect from "@/components/MultiSelect";
-import RadioInput from "@/components/Radio";
-import CheckboxGroup from "@/components/CheckBoxGroup";
-import DecimalNumber from "@/components/DecimalNumber";
-import ThousandDividerInput from "@/components/ThousandDividerInput";
-import PhoneNumberInput from "@/components/PhoneNumberInput";
-import CustomFile from "@/components/CustomFile/index2";
-import FloatNumber from "@/components/FloatNumber";
+import {
+  CheckboxGroup,
+  CustomFile,
+  DecimalNumber,
+  FloatNumber,
+  MultiSelect,
+  PhoneNumberInput,
+  RadioInput,
+  Text,
+  TextArea,
+  ThousandDividerInput,
+} from "@/components";
 
 const matchIsValidTelCustom = (phoneNumber: string) => {
   // If phoneNumber is not a string or is empty, return false
@@ -57,15 +56,6 @@ const validationSchema = Yup.object({
       "Please enter a valid decimal number with two decimal places",
       (value: any) => (value === null ? true : /[0-9]+\.[0-9]+$/.test(value))
     ),
-  // floatNumber: Yup.string()
-  //   .typeError("Please enter a valid number")
-  //   .required("Required")
-  //   .test("is-float", "Please enter a valid float number", (value: any) =>
-  //     value === null ? true : /^\d+(\.\d+)?$/.test(value)
-  //   ),
-  // floatNumber: Yup.string()
-  //   .matches(/^[-+][0-9]+\.[0-9]+[eE][-+]?[0-9]+$/, "Must be a valid float number")
-  //   .required("Required"),
   files: Yup.array().min(1, "Select at least one file"),
   phoneInput: Yup.string().test(
     "isValidPhoneNumber",
@@ -74,6 +64,7 @@ const validationSchema = Yup.object({
       return matchIsValidTelCustom(value);
     }
   ),
+  numberWithCommas: Yup.string().required("Number is required"),
   message: Yup.string().required("Message is required"),
 });
 
@@ -98,11 +89,6 @@ export default function Home() {
     },
     enableReinitialize: true,
   });
-
-  const handleFileChange = (event: any) => {
-    const files = Array.from(event.target.files);
-    formik.setFieldValue("files", files);
-  };
 
   return (
     <main className={styles.main}>

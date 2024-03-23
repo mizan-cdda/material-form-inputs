@@ -1,7 +1,7 @@
 "use client";
 import AutoCompleteField from "@/components/AutoComplete";
 import OTPInput from "@/components/OTP";
-import OTPForm from "@/components/OTP/index2";
+import OTPForm from "@/components/OTP";
 import TransferList from "@/components/TransferList";
 import { Box, Divider, Stack } from "@mui/material";
 import React from "react";

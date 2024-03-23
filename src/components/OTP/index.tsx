@@ -1,302 +1,190 @@
-import * as React from "react";
-import { Input as BaseInput } from "@mui/base/Input";
-import { Box, styled } from "@mui/system";
-import { Button, FormHelperText } from "@mui/material";
+import React, { useEffect, useRef } from "react";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-
-function OTP({
-  separator,
-  length,
-  value,
-  onChange,
-}: {
-  separator: React.ReactNode;
-  length: number;
-  value: string;
-  onChange: React.Dispatch<React.SetStateAction<string>>;
-}) {
-  const inputRefs = React.useRef<HTMLInputElement[]>(
-    new Array(length).fill(null)
-  );
-
-  const focusInput = (targetIndex: number) => {
-    const targetInput = inputRefs.current[targetIndex];
-    targetInput.focus();
-  };
-
-  const selectInput = (targetIndex: number) => {
-    const targetInput = inputRefs.current[targetIndex];
-    targetInput.select();
-  };
-
-  const handleKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-    currentIndex: number
-  ) => {
-    switch (event.key) {
-      case "ArrowUp":
-      case "ArrowDown":
-      case " ":
-        event.preventDefault();
-        break;
-      case "ArrowLeft":
-        event.preventDefault();
-        if (currentIndex > 0) {
-          focusInput(currentIndex - 1);
-          selectInput(currentIndex - 1);
-        }
-        break;
-      case "ArrowRight":
-        event.preventDefault();
-        if (currentIndex < length - 1) {
-          focusInput(currentIndex + 1);
-          selectInput(currentIndex + 1);
-        }
-        break;
-      case "Delete":
-        event.preventDefault();
-        onChange((prevOtp) => {
-          const otp =
-            prevOtp.slice(0, currentIndex) + prevOtp.slice(currentIndex + 1);
-          return otp;
-        });
-
-        break;
-      case "Backspace":
-        event.preventDefault();
-        if (currentIndex > 0) {
-          focusInput(currentIndex - 1);
-          selectInput(currentIndex - 1);
-        }
-
-        onChange((prevOtp) => {
-          const otp =
-            prevOtp.slice(0, currentIndex) + prevOtp.slice(currentIndex + 1);
-          return otp;
-        });
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    currentIndex: number
-  ) => {
-    const currentValue = event.target.value;
-    let indexToEnter = 0;
-
-    while (indexToEnter <= currentIndex) {
-      if (
-        inputRefs.current[indexToEnter].value &&
-        indexToEnter < currentIndex
-      ) {
-        indexToEnter += 1;
-      } else {
-        break;
-      }
-    }
-    onChange((prev) => {
-      const otpArray = prev.split("");
-      const lastValue = currentValue[currentValue.length - 1];
-      otpArray[indexToEnter] = lastValue;
-      return otpArray.join("");
-    });
-    if (currentValue !== "") {
-      if (currentIndex < length - 1) {
-        focusInput(currentIndex + 1);
-      }
-    }
-  };
-
-  const handleClick = (
-    event: React.MouseEvent<HTMLInputElement, MouseEvent>,
-    currentIndex: number
-  ) => {
-    selectInput(currentIndex);
-  };
-
-  const handlePaste = (
-    event: React.ClipboardEvent<HTMLInputElement>,
-    currentIndex: number
-  ) => {
-    event.preventDefault();
-    const clipboardData = event.clipboardData;
-
-    // Check if there is text data in the clipboard
-    if (clipboardData.types.includes("text/plain")) {
-      let pastedText = clipboardData.getData("text/plain");
-      pastedText = pastedText.substring(0, length).trim();
-      let indexToEnter = 0;
-
-      while (indexToEnter <= currentIndex) {
-        if (
-          inputRefs.current[indexToEnter].value &&
-          indexToEnter < currentIndex
-        ) {
-          indexToEnter += 1;
-        } else {
-          break;
-        }
-      }
-
-      const otpArray = value.split("");
-
-      for (let i = indexToEnter; i < length; i += 1) {
-        const lastValue = pastedText[i - indexToEnter] ?? " ";
-        otpArray[i] = lastValue;
-      }
-
-      onChange(otpArray.join(""));
-    }
-  };
-
-  return (
-    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-      {new Array(length).fill(null).map((_, index) => (
-        <React.Fragment key={index}>
-          <BaseInput
-            slots={{
-              input: InputElement,
-            }}
-            aria-label={`Digit ${index + 1} of OTP`}
-            slotProps={{
-              input: {
-                ref: (ele) => {
-                  inputRefs.current[index] = ele!;
-                },
-                onKeyDown: (event) => handleKeyDown(event, index),
-                onChange: (event) => handleChange(event, index),
-                onClick: (event) => handleClick(event, index),
-                onPaste: (event) => handlePaste(event, index),
-                value: value[index] ?? "",
-              },
-            }}
-          />
-          {index === length - 1 ? null : separator}
-        </React.Fragment>
-      ))}
-    </Box>
-  );
-}
+import { Box, Button, TextField } from "@mui/material";
 
 const validationSchema = Yup.object().shape({
-  otp: Yup.string()
-    .matches(/^\d{5}$/, "OTP must be exactly 5 digits")
-    .required("OTP is required"),
+  otp: Yup.array()
+    .of(
+      Yup.string()
+        .length(1, "Each digit must be exactly 1 character long")
+        .required("This field is required")
+    )
+    .required("OTP is required")
+    .min(5, "OTP must be 5 digits")
+    .max(5, "OTP must be 5 digits"),
 });
 
-export default function OTPInput() {
-  const [otp, setOtp] = React.useState("");
-  const [errors, setErrors] = React.useState({ otp: "" });
+const OTPForm = () => {
+  const initialValues = {
+    otp: ["", "", "", "", ""],
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    validationSchema
-      .validate({ otp }, { abortEarly: false })
-      .then(() => {
-        console.log(otp); // Handle submission logic here
-        setErrors({ otp: "" }); // Clear any previous errors
-      })
-      .catch((error) => {
-        const otpError = error.inner.find((e) => e.path === "otp");
-        if (otpError) {
-          setErrors({ otp: otpError.message });
+  // handle submit for otp form , joining all input values together
+  const handleSubmit = (values: any, actions: any) => {
+    const otp = values.otp.join("");
+    actions.setSubmitting(false);
+    if (otp) {
+      alert(`OTP submitted: ${otp}`);
+    }
+  };
+
+  //  refer changes
+  const inputRefs = useRef<Array<HTMLInputElement | null>>(
+    Array.from({ length: 5 }, () => null)
+  );
+
+  // handle paste event
+  const handlePaste = ({
+    e,
+    setFieldValue,
+  }: {
+    e: React.ClipboardEvent<HTMLInputElement>;
+    setFieldValue: (field: string, value: string) => void;
+  }) => {
+    // Get pasted data from clipboard
+    const pastedData = e.clipboardData.getData("Text").split("");
+    if (pastedData.length === inputRefs.current.length) {
+      // Update the formik values with the formatted value
+      pastedData?.forEach((input, index) => {
+        // Check if the pasted data is a number
+        if (!isNaN(parseInt(input))) {
+          inputRefs.current[index]?.setAttribute("disabled", "true"); // disable the input
+          inputRefs.current[index].value = Number(pastedData[index]); // set the value
+          setFieldValue(`otp[${index}]`, Number(pastedData[index])); // update the formik values
+          if (index === inputRefs.current.length - 1) {
+            // focus on the last input
+            inputRefs.current[index]?.removeAttribute("disabled"); // enable the last input
+            inputRefs.current[index]?.focus();
+          }
         }
       });
+    } else {
+      return;
+    }
   };
+
+  // effect for initializing first input focus and disabling otherss
+  useEffect(() => {
+    inputRefs.current[0]?.focus();
+    // others input will be disabled
+    inputRefs.current.forEach((input, index) => {
+      if (index !== 0) {
+        input?.setAttribute("disabled", "true");
+      }
+    });
+  }, []);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 2,
-      }}
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
     >
-      <form onSubmit={handleSubmit}>
-        <OTP
-          separator={<span>-</span>}
-          value={otp}
-          onChange={setOtp}
-          length={5}
-        />
-        <FormHelperText
-          style={{
-            color: "red",
-            fontSize: "0.75rem",
-            fontWeight: 400,
-            lineHeight: 1.66,
-            letterSpacing: "0.03333em",
-            textAlign: "left",
-            marginTop: "8px",
-          }}
-        >
-          {errors.otp && <div>{errors.otp}</div>}
-        </FormHelperText>
-        <Button variant="outlined" type="submit">
-          <span>Submit</span>
-        </Button>
-      </form>
-    </Box>
+      {({ isSubmitting, values, setFieldValue }) => (
+        <Form>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 1,
+              maxWidth: "300px",
+            }}
+          >
+            {Array.from({ length: 5 }, (_, index) => (
+              <Field
+                key={index}
+                name={`otp[${index}]`}
+                render={({ field }: { field: any }) => (
+                  <TextField
+                    {...field}
+                    name={`otp[${index}]`}
+                    type="text"
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    inputRef={(el) => (inputRefs.current[index] = el)}
+                    onPaste={(e) =>
+                      index === 0
+                        ? handlePaste({ e, setFieldValue })
+                        : undefined
+                    }
+                    onChange={(e) => {
+                      const numericValue = e.target.value.replace(/\D/g, "");
+
+                      // Update the formik values with the formatted value
+                      field.onChange({
+                        target: {
+                          // Simulate the event object
+                          value: numericValue,
+                          name: field.name,
+                        },
+                      });
+
+                      if (
+                        numericValue.length === 1 &&
+                        index < inputRefs.current.length - 1
+                      ) {
+                        // enable the next input
+                        inputRefs.current.forEach((input, i) => {
+                          if (i === index + 1) {
+                            input?.removeAttribute("disabled");
+                          } else {
+                            input?.setAttribute("disabled", "true");
+                          }
+                        });
+                        inputRefs?.current[index + 1]?.focus();
+                      }
+
+                      // If the input is empty and the user is deleting the value
+                      if (numericValue.length === 0 && index > 0) {
+                        // enable the previous input
+                        inputRefs.current.forEach((input, i) => {
+                          if (i === index - 1) {
+                            input?.removeAttribute("disabled");
+                          } else {
+                            input?.setAttribute("disabled", "true");
+                          }
+                        });
+                        inputRefs?.current[index - 1]?.focus();
+                      }
+                    }}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      inputMode: "numeric",
+                      pattern: "[0-9]*",
+                      maxLength: 1,
+
+                      autoComplete: "off",
+                    }}
+                    error={
+                      field.touched?.[`otp[${index}]`] &&
+                      (field.value.length === 0 ||
+                        (field.value.length === 1 &&
+                          isNaN(parseInt(field.value))))
+                    }
+                  />
+                )}
+              />
+            ))}
+          </Box>
+          <Button
+            sx={{
+              marginTop: "1rem",
+              width: "100%",
+            }}
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting || values.otp.some((digit) => digit === "")}
+          >
+            Submit
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
-}
-
-const blue = {
-  100: "#DAECFF",
-  200: "#80BFFF",
-  400: "#3399FF",
-  500: "#007FFF",
-  600: "#0072E5",
-  700: "#0059B2",
 };
 
-const grey = {
-  50: "#F3F6F9",
-  100: "#E5EAF2",
-  200: "#DAE2ED",
-  300: "#C7D0DD",
-  400: "#B0B8C4",
-  500: "#9DA8B7",
-  600: "#6B7A90",
-  700: "#434D5B",
-  800: "#303740",
-  900: "#1C2025",
-};
-
-const InputElement = styled("input")(
-  ({ theme }) => `
-  width: 40px;
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.5;
-  padding: 8px 0px;
-  border-radius: 8px;
-  text-align: center;
-  color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
-  background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
-  border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
-  box-shadow: 0px 2px 4px ${
-    theme.palette.mode === "dark" ? "rgba(0,0,0, 0.5)" : "rgba(0,0,0, 0.05)"
-  };
-
-  &:hover {
-    border-color: ${blue[400]};
-  }
-
-  &:focus {
-    border-color: ${blue[400]};
-    box-shadow: 0 0 0 3px ${
-      theme.palette.mode === "dark" ? blue[600] : blue[200]
-    };
-  }
-
-  // firefox
-  &:focus-visible {
-    outline: 0;
-  }
-`
-);
+export default OTPForm;
