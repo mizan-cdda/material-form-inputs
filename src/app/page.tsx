@@ -68,8 +68,7 @@ const validationSchema = Yup.object({
   numberWithCommas: Yup.string().required("Number is required"),
   message: Yup.string().required("Message is required"),
   customSwitch: Yup.boolean()
-    .oneOf([true], "Custom Switch is required")
-    .required("Custom Switch is required"),
+    .oneOf([true], "Custom Switch is required").required("Custom Switch is required"),
 });
 
 export default function Home() {
@@ -277,7 +276,7 @@ export default function Home() {
         />
 
         {/* Custom switch */}
-        <CustomizedSwitch formik={formik} />
+        <CustomizedSwitch formik={formik} label="Custom Switch" name="customSwitch" variant="android" />
 
         <Button
           sx={{ mt: 3 }}

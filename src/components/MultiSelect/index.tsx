@@ -10,14 +10,6 @@ import React from "react";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 const MultiSelect = ({
   formik,
@@ -41,12 +33,7 @@ const MultiSelect = ({
         formik.touched.selectedOptions && Boolean(formik.errors.selectedOptions)
       }
     >
-      <InputLabel
-        id="demo-simple-select-disabled-label"
-
-      >
-        {label}
-      </InputLabel>
+      <InputLabel id="demo-simple-select-disabled-label">{label}</InputLabel>
       <Select
         labelId="demo-simple-select-disabled-label"
         id={id}
@@ -57,7 +44,9 @@ const MultiSelect = ({
         value={formik.values.selectedOptions}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        renderValue={(selected) => selected.join(", ")}
+        renderValue={(selected) =>
+          typeof selected === "object" ? selected?.join(", ") : selected
+        }
       >
         {options.map((option, index) => (
           <MenuItem key={index} value={option?.value || option}>
