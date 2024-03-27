@@ -13,6 +13,7 @@ import Text from "./Text";
 import TextArea from "./TextArea";
 import ThousandDividerInput from "./ThousandDividerInput";
 import TreeCheckbox from "./TreeCheckbox";
+import { CustomizedSwitch } from "./CustomizedSwitch";
 
 export {
   AutoComplete,
@@ -30,4 +31,5 @@ export {
   TextArea,
   ThousandDividerInput,
   TreeCheckbox,
+  CustomizedSwitch,
 };

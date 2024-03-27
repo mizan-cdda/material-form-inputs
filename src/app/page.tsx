@@ -1,12 +1,13 @@
 "use client";
 import styles from "./page.module.css";
-import { Button } from "@mui/material";
+import { Button, FormControlLabel, Switch, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { matchIsValidTel } from "mui-tel-input";
 import {
   CheckboxGroup,
   CustomFile,
+  CustomizedSwitch,
   DecimalNumber,
   FloatNumber,
   MultiSelect,
@@ -66,6 +67,9 @@ const validationSchema = Yup.object({
   ),
   numberWithCommas: Yup.string().required("Number is required"),
   message: Yup.string().required("Message is required"),
+  customSwitch: Yup.boolean()
+    .oneOf([true], "Custom Switch is required")
+    .required("Custom Switch is required"),
 });
 
 export default function Home() {
@@ -272,55 +276,8 @@ export default function Home() {
           variant="outlined"
         />
 
-        {/* <div>
-          <PhoneNumberInput
-            label="Phone Number"
-            value={formik.values.phoneNumber}
-            onChange={formik.handleChange("phoneNumber")}
-            onBlur={formik.handleBlur("phoneNumber")}
-            error={formik.touched.phoneNumber && formik.errors.phoneNumber}
-          />
-          {formik.touched.phoneNumber && formik.errors.phoneNumber && (
-            <Box sx={{ color: "red" }}>{String(formik.errors.phoneNumber)}</Box>
-          )}
-        </div> */}
-
-        {/* Rich text editor */}
-        {/* <>
-          <FormControl
-            fullWidth
-            error={formik.touched.content && Boolean(formik.errors.content)}
-            sx={{
-              border:
-                formik.touched.content && formik.errors.content
-                  ? "1px solid #f44336"
-                  : "1px solid transparent",
-              borderRadius: "4px",
-            }}
-          >
-            <RichTextEditor
-              name="content"
-              ref={rteRef}
-              extensions={[StarterKit]}
-              content={formik.values.content}
-              onChange={(content) => {
-                console.log("content", content);
-                formik.setFieldValue("content", content);
-              }}
-              renderControls={() => (
-                <MenuControlsContainer>
-                  <MenuSelectHeading />
-                  <MenuDivider />
-                  <MenuButtonBold />
-                  <MenuButtonItalic />
-                </MenuControlsContainer>
-              )}
-            />
-          </FormControl>
-          <FormHelperText style={{ color: "#f44336" }}>
-            {formik.touched.content && formik.errors.content}
-          </FormHelperText>
-        </> */}
+        {/* Custom switch */}
+        <CustomizedSwitch formik={formik} />
 
         <Button
           sx={{ mt: 3 }}
