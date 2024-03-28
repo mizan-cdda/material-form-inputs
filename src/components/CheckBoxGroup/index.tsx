@@ -14,12 +14,14 @@ const CheckboxGroup = ({
   row = true,
   options = [],
   label = "",
+  required = false,
 }: {
   formik: any;
   name: string;
   row?: boolean;
   options?: { value: string; label: string; disabled: boolean }[];
   label?: string;
+  required?: boolean;
 }) => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target as HTMLInputElement;

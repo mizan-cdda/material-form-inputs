@@ -12,7 +12,8 @@ const Text = ({
   multiline = false,
   rows = 1,
   helperText = true,
-  defaultValue="Hello world"
+  defaultValue = "Hello world",
+  required = false,
 }: {
   formik: any;
   type: string;
@@ -25,6 +26,7 @@ const Text = ({
   rows?: number;
   helperText?: boolean;
   defaultValue?: string;
+  required?: boolean;
 }) => {
   return (
     <TextField
@@ -33,7 +35,7 @@ const Text = ({
       defaultValue={defaultValue}
       fullWidth
       id={id}
-      variant={variant ? variant as TextFieldVariants : "outlined"}
+      variant={variant ? (variant as TextFieldVariants) : "outlined"}
       // InputLabelProps={{
       //     shrink: animation && formik.values.email ? true : false,
       // }}
@@ -45,6 +47,7 @@ const Text = ({
       onBlur={formik.handleBlur}
       error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
       helperText={helperText && formik.touched?.[name] && formik.errors?.[name]}
+      {...(required && { required: true })}
     />
   );
 };

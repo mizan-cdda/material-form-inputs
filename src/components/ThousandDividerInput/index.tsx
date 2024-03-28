@@ -8,6 +8,7 @@ const ThousandDividerInput = ({
   label,
   rows,
   variant,
+  required = false,
 }: {
   formik: any;
 
@@ -16,6 +17,7 @@ const ThousandDividerInput = ({
   label: string;
   rows: number;
   variant: string;
+  required?: boolean;
 }) => {
   const formatNumber = (value: any) => {
     // Remove non-numeric characters
@@ -46,6 +48,7 @@ const ThousandDividerInput = ({
       onBlur={formik.handleBlur}
       error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
       helperText={formik.touched?.[name] && formik.errors?.[name]}
+      {...(required && { required: true })}
     />
   );
 };

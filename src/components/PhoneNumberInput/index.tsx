@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
+import { MuiTelInput } from "mui-tel-input";
 import { FormControl, FormHelperText } from "@mui/material";
 
 const PhoneNumberInput = ({
@@ -9,6 +9,7 @@ const PhoneNumberInput = ({
   label,
   onlyCountries = ["BD", "US"],
   defaultCountry = "BD",
+  required = false,
 }: {
   formik: any;
 
@@ -18,6 +19,7 @@ const PhoneNumberInput = ({
   variant: string;
   onlyCountries?: string[];
   defaultCountry?: string;
+  required?: boolean;
 }) => {
   return (
     <FormControl
@@ -34,6 +36,7 @@ const PhoneNumberInput = ({
         forceCallingCode
         onlyCountries={onlyCountries as any[]}
         defaultCountry={defaultCountry as any | undefined}
+        {...(required && { required: true })}
       />
       <FormHelperText>
         {formik.touched?.[name] && formik.errors?.[name]}

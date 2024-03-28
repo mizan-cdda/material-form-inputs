@@ -9,6 +9,7 @@ const TextArea = ({
   label,
   rows,
   variant,
+  required=false,
 }: {
   formik: any;
 
@@ -17,6 +18,7 @@ const TextArea = ({
   label: string;
   rows: number;
   variant: string;
+  required?: boolean;
 }) => {
   return (
     <FormControl
@@ -34,6 +36,7 @@ const TextArea = ({
         animation={false}
         type="text"
         helperText={false}
+        {...(required && { required: true })}
       />
       <FormHelperText>
         {formik.touched.message && formik.errors.message}

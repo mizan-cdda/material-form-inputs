@@ -81,6 +81,18 @@ const data = [
     label: "Email",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "",
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Email is required",
+      },
+      {
+        type: "email",
+        value: true,
+        message: "Enter a valid email",
+      },
+    ],
   },
   {
     id: "number",
@@ -90,6 +102,18 @@ const data = [
     label: "Number",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "",
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Number is required",
+      },
+      {
+        type: "min",
+        value: 1,
+        message: "Number must be greater than 0",
+      },
+    ],
   },
   {
     id: "message",
@@ -99,6 +123,23 @@ const data = [
     label: "Message",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "",
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Message is required",
+      },
+      {
+        type: "min",
+        value: 1,
+        message: "Message must be greater than 0",
+      },
+      {
+        type: "max",
+        value: 255,
+        message: "Message must be less than 255",
+      },
+    ],
   },
   {
     id: "selectedOptions",
@@ -123,6 +164,18 @@ const data = [
     ],
     multiple: true, // if true, multiple options can be selected, if false, only one option can be selected
     defaultValue: ["option1", "option2"],
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Select at least one option",
+      },
+      {
+        type: "min",
+        value: 1,
+        message: "Select at least one option",
+      },
+    ],
   },
   {
     id: "checkbox-group",
@@ -148,6 +201,18 @@ const data = [
     ],
     row: true, // if true, checkboxes will be displayed in a row, if false, checkboxes will be displayed in a column,
     defaultValue: [],
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Select at least one checkbox",
+      },
+      {
+        type: "min",
+        value: 1,
+        message: "Select at least one checkbox",
+      },
+    ],
   },
   {
     id: "radio-group",
@@ -173,6 +238,13 @@ const data = [
     ],
     row: true, // if true, radios will be displayed in a row, if false, radios will be displayed in a column,
     defaultValue: "radio1",
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Select an option",
+      },
+    ],
   },
   {
     id: "float-number",
@@ -182,6 +254,18 @@ const data = [
     label: "Float Number",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "27.00",
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Float Number is required",
+      },
+      {
+        type: "min",
+        value: 1,
+        message: "Float Number must be greater than 0",
+      },
+    ],
   },
   {
     id: "decimal-number",
@@ -191,6 +275,18 @@ const data = [
     label: "Decimal Number",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "27.00",
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Decimal Number is required",
+      },
+      {
+        type: "min",
+        value: 1,
+        message: "Decimal Number must be greater than 0",
+      },
+    ],
   },
   {
     id: "number-with-thousand-separator",
@@ -200,6 +296,13 @@ const data = [
     label: "Number With Thousand Separator",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "27,000",
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Number with Thousand Separator is required",
+      },
+    ],
   },
   {
     id: "file",
@@ -209,6 +312,13 @@ const data = [
     variant: "outlined", // outlined, filled, standard
     accept: ".pdf,.docx,.doc",
     defaultValue: "",
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "File is required",
+      },
+    ],
   },
   {
     id: "phone",
@@ -219,6 +329,13 @@ const data = [
     variant: "outlined", // outlined, filled, standard
     defaultValue: "BD",
     onlyCountries: ["us", "bd"],
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Phone is required",
+      },
+    ],
   },
   {
     id: "switch",
@@ -227,6 +344,13 @@ const data = [
     label: "Custom Switch",
     defaultValue: false,
     variant: "android", // ios, android, ant, default
+    validation: [
+      {
+        type: "required",
+        value: true,
+        message: "Custom Switch is required",
+      },
+    ],
   },
 ];
 
@@ -244,6 +368,7 @@ export default function Home() {
       files: [],
       phoneInput: "",
       message: "",
+      customSwitch: false,
     },
     validationSchema,
     onSubmit: async (values: any, { setSubmitting }) => {
@@ -251,18 +376,6 @@ export default function Home() {
       const formData = new FormData();
 
       // Append all form values to formData
-      // type file values need to be appended separately
-      // if (Array.isArray(validationSchema.fields)) {
-      //   validationSchema.fields.forEach((field) => {
-      //     if (field.type === "file") {
-      //       console.log("field", field);
-      //       formData.append(field.name, field);
-      //       // return;
-      //     }
-      //     formData.append(field.name, values[field.name]);
-      //   });
-      // }
-
       for (const key in values) {
         if (key === "files") {
           values[key].forEach((file: File) => {
@@ -273,7 +386,9 @@ export default function Home() {
         }
       }
 
+      // Make a POST request to the server
       try {
+        // Set formik submitting to true
         setSubmitting(true);
         const response = await fetch("https://dev.cdda.io/filemanager", {
           method: "POST",
@@ -286,8 +401,10 @@ export default function Home() {
         // Handle error
         console.log(error);
       }
+      // Set formik submitting to false
       setSubmitting(false);
     },
+    // Enable reinitialize to update the form values
     enableReinitialize: true,
   });
 
@@ -448,6 +565,7 @@ export default function Home() {
           name="email"
           variant="outlined"
           defaultValue="dewan.mizanur911@gmail.com"
+          // required
         />
 
         {/* Number input */}
@@ -459,6 +577,7 @@ export default function Home() {
           formik={formik}
           variant="outlined"
           animation={false}
+          // required
         />
 
         {/* Custom text area input */}
@@ -469,6 +588,7 @@ export default function Home() {
           name="message"
           rows={6}
           variant="outlined"
+          // required
         />
 
         {/* Multi select */}
@@ -495,6 +615,7 @@ export default function Home() {
               disabled: false,
             },
           ]}
+          // required
         />
 
         {/* Radio group */}
@@ -550,6 +671,7 @@ export default function Home() {
             },
           ]}
           row={true}
+          // required
         />
 
         {/* Float number input */}
@@ -568,6 +690,7 @@ export default function Home() {
           name="decimalNumber"
           label="Decimal Number"
           variant="outlined"
+          // required
         />
 
         {/* Number with comma */}
@@ -578,32 +701,16 @@ export default function Home() {
           label="Number with Commas"
           rows={1}
           variant="outlined"
+          // required
         />
-
-        {/* FIle upload */}
-        {/* <FormControl
-          fullWidth
-          error={formik.touched.files && Boolean(formik.errors.files)}
-        >
-          <InputLabel htmlFor="file-upload">Select Files</InputLabel>
-          <Input
-            id="file-upload"
-            type="file"
-            name="files"
-            onChange={handleFileChange}
-            inputProps={{ accept: ".pdf,.doc,.docx" }} // Specify accepted file types
-          />
-          <FormHelperText>
-            {formik.touched.files && formik.errors.files}
-          </FormHelperText>
-        </FormControl> */}
+          
+          {/* File upload */}
         <CustomFile
           formik={formik}
           id="file-upload"
           name="files"
           label="Select Files"
           variant="outlined"
-          accept="image/*,.pdf,.doc,.docx,.video/*,.audio/*"
         />
 
         {/* Phone number input */}
@@ -615,6 +722,7 @@ export default function Home() {
           variant="outlined"
           defaultCountry="BD"
           onlyCountries={["BD", "US"]}
+          // required
         />
 
         {/* Custom switch */}
@@ -629,7 +737,10 @@ export default function Home() {
           sx={{ mt: 3 }}
           type="submit"
           variant="contained"
-          disabled={formik.isSubmitting}
+          disabled={
+            // (formik.dirty && formik.isValid ? false : true) ||
+            formik.isSubmitting
+          }
         >
           {/* {!waiting ? 'Save' : 'Saving...'} */}
           Save

@@ -18,6 +18,7 @@ const MultiSelect = ({
   id,
   label = "Multiple",
   options,
+  required,
 }: {
   formik: any;
   name: string;
@@ -25,6 +26,7 @@ const MultiSelect = ({
   id: string;
   label: string;
   options: any[];
+  required?: boolean;
 }) => {
   return (
     <FormControl
@@ -47,6 +49,7 @@ const MultiSelect = ({
         renderValue={(selected) =>
           typeof selected === "object" ? selected?.join(", ") : selected
         }
+        {...(required && { required: true })}
       >
         {options.map((option, index) => (
           <MenuItem key={index} value={option?.value || option}>

@@ -217,7 +217,7 @@ export const CustomizedSwitch = ({
           width: "100%",
         }}
       >
-        <Typography style={{ padding: "2px", fontWeight : 500, color : formik.errors?.[name] ? "red" : "black" }}>{label}</Typography>
+        <Typography style={{ padding: "2px", fontWeight : 500, color : formik.errors?.[name] && formik.touched?.[name] ? "red" : "black" }}>{label}</Typography>
         <FormControlLabel
           labelPlacement={labelDirection}
           control={

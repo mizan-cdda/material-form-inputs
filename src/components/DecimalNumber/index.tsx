@@ -7,6 +7,7 @@ const DecimalNumber = ({
   name,
   label,
   variant,
+  required = false,
 }: {
   formik: any;
 
@@ -14,14 +15,8 @@ const DecimalNumber = ({
   name: string;
   label: string;
   variant: string;
+  required?: boolean;
 }) => {
-  const formatNumber = (value: any) => {
-    // Remove non-numeric characters
-    const numericValue = value.replace(/\D/g, "");
-    // Add commas for thousands
-    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     // Regex to match decimal number
@@ -51,6 +46,7 @@ const DecimalNumber = ({
         inputMode: "decimal",
         pattern: "[0-9]*[.,]?[0-9]*", // Pattern to allow digits, dot, or comma
       }}
+      // {...(required && { required: true })}
     />
   );
 };
