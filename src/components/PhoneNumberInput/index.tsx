@@ -7,6 +7,8 @@ const PhoneNumberInput = ({
   id,
   name,
   label,
+  onlyCountries = ["BD", "US"],
+  defaultCountry = "BD",
 }: {
   formik: any;
 
@@ -14,6 +16,8 @@ const PhoneNumberInput = ({
   name: string;
   label: string;
   variant: string;
+  onlyCountries?: string[];
+  defaultCountry?: string;
 }) => {
   return (
     <FormControl
@@ -28,8 +32,8 @@ const PhoneNumberInput = ({
         onChange={(phone) => formik.setFieldValue(name, phone)}
         error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
         forceCallingCode
-        onlyCountries={["BD", "US"]}
-        defaultCountry="BD"
+        onlyCountries={onlyCountries as any[]}
+        defaultCountry={defaultCountry as any | undefined}
       />
       <FormHelperText>
         {formik.touched?.[name] && formik.errors?.[name]}

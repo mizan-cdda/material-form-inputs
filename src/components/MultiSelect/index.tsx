@@ -38,7 +38,7 @@ const MultiSelect = ({
         labelId="demo-simple-select-disabled-label"
         id={id}
         name={name}
-        multiple={multiple}
+        {...(multiple && { multiple: true })}
         input={<OutlinedInput label="Name" />}
         // MenuProps={MenuProps}
         value={formik.values.selectedOptions}

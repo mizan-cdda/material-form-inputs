@@ -12,6 +12,7 @@ const Text = ({
   multiline = false,
   rows = 1,
   helperText = true,
+  defaultValue="Hello world"
 }: {
   formik: any;
   type: string;
@@ -23,12 +24,13 @@ const Text = ({
   multiline?: boolean;
   rows?: number;
   helperText?: boolean;
+  defaultValue?: string;
 }) => {
   return (
     <TextField
       rows={rows}
       multiline={multiline}
-      defaultValue="Hello World"
+      defaultValue={defaultValue}
       fullWidth
       id={id}
       variant={variant ? variant as TextFieldVariants : "outlined"}

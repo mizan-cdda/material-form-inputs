@@ -135,7 +135,7 @@ const OTPForm = () => {
                         inputRefs?.current[index + 1]?.focus();
                       }
 
-                      // If the input is empty and the user is deleting the value
+                      // If the input is empty and the user is deleting the value and user hit delete button on keyboard
                       if (numericValue.length === 0 && index > 0) {
                         // enable the previous input
                         inputRefs.current.forEach((input, i) => {
