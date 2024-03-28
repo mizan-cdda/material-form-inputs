@@ -142,7 +142,6 @@ const CustomFile = ({
             }}
           >
             {fileThumbnails.map((thumbnail, index) => {
-              console.log(thumbnail);
               return (
                 <div
                   key={index}
