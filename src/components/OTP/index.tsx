@@ -49,13 +49,16 @@ const OTPForm = () => {
       pastedData?.forEach((input, index) => {
         // Check if the pasted data is a number
         if (!isNaN(parseInt(input))) {
-          inputRefs.current[index]?.setAttribute("disabled", "true"); // disable the input
-          inputRefs.current[index].value = Number(pastedData[index]); // set the value
-          setFieldValue(`otp[${index}]`, Number(pastedData[index])); // update the formik values
-          if (index === inputRefs.current.length - 1) {
-            // focus on the last input
-            inputRefs.current[index]?.removeAttribute("disabled"); // enable the last input
-            inputRefs.current[index]?.focus();
+          const inputRef = inputRefs.current[index];
+          if (inputRef) {
+            inputRef.setAttribute("disabled", "true"); // disable the input
+            inputRef.value = String(Number(pastedData[index])); // set the value as a string
+            setFieldValue(`otp[${index}]`, String(Number(pastedData[index]))); // update the formik values
+            if (index === inputRefs.current.length - 1) {
+              // focus on the last input
+              inputRef.removeAttribute("disabled"); // enable the last input
+              inputRef.focus();
+            }
           }
         }
       });
@@ -103,11 +106,33 @@ const OTPForm = () => {
                     margin="normal"
                     fullWidth
                     inputRef={(el) => (inputRefs.current[index] = el)}
-                    onPaste={(e) =>
+                    onPaste={(e: React.ClipboardEvent<HTMLInputElement>) =>
                       index === 0
                         ? handlePaste({ e, setFieldValue })
                         : undefined
                     }
+                    onKeyDown={(e) => {
+                      if (e.key === "Backspace" && field.value === "") {
+                        e.preventDefault();
+                        // find the previous input field and focus on it
+                        const previousIndex = index - 1;
+                        if (previousIndex >= 0) {
+                          inputRefs.current[previousIndex]?.focus();
+                        }
+
+                        // enable the previous input
+                        if (index > 0) {
+                          inputRefs.current.forEach((input, i) => {
+                            if (i === index - 1) {
+                              input?.removeAttribute("disabled");
+                            } else {
+                              input?.setAttribute("disabled", "true");
+                            }
+                          });
+                          inputRefs?.current[index - 1]?.focus();
+                        }
+                      }
+                    }}
                     onChange={(e) => {
                       const numericValue = e.target.value.replace(/\D/g, "");
 
@@ -133,19 +158,6 @@ const OTPForm = () => {
                           }
                         });
                         inputRefs?.current[index + 1]?.focus();
-                      }
-
-                      // If the input is empty and the user is deleting the value and user hit delete button on keyboard
-                      if (numericValue.length === 0 && index > 0) {
-                        // enable the previous input
-                        inputRefs.current.forEach((input, i) => {
-                          if (i === index - 1) {
-                            input?.removeAttribute("disabled");
-                          } else {
-                            input?.setAttribute("disabled", "true");
-                          }
-                        });
-                        inputRefs?.current[index - 1]?.focus();
                       }
                     }}
                     InputLabelProps={{
