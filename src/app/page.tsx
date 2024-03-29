@@ -2,9 +2,8 @@
 import styles from "./page.module.css";
 import { Button } from "@mui/material";
 import { useFormik } from "formik";
-import * as Yup from "yup";
-import { matchIsValidTel } from "mui-tel-input";
 import {
+  AutoComplete,
   CheckboxGroup,
   CustomFile,
   CustomizedSwitch,
@@ -20,21 +19,7 @@ import {
 import { buildInitialValuesAndValidationSchema } from "@/utils/valuesWithSchema";
 import { data } from "@/data/inputs";
 import { all_types } from "@/data/enum";
-
-const matchIsValidTelCustom = (phoneNumber: string) => {
-  // If phoneNumber is not a string or is empty, return false
-  if (typeof phoneNumber !== "string" || phoneNumber.trim() === "") {
-    return false;
-  }
-
-  // Implement your custom verification logic here
-  // For demonstration, let's assume the phoneNumber is valid if it contains at least 5 characters
-  return matchIsValidTel(phoneNumber, {
-    onlyCountries: ["BD", "US"], // optional,
-    continents: ["AS", "NA"], // optional
-  });
-  // return phoneNumber.length >= 5;
-};
+import { top100Films } from "@/data/fakeData";
 
 export default function Home() {
   const {
@@ -51,7 +36,7 @@ export default function Home() {
       FILE,
       PHONE,
       SWITCH,
-      IS_EMAIL,
+      AUTOCOMPLETE,
     },
   } = all_types || {};
   const { initialValues, validationSchema } =
@@ -61,34 +46,65 @@ export default function Home() {
     initialValues,
     validationSchema,
     onSubmit: async (values: any, { setSubmitting }) => {
-      console.log("values", values);
+      console.log("Form values:", values);
       const formData = new FormData();
-
-      // Append all form values to formData
-      for (const key in values) {
-        if (key === "files") {
-          values[key].forEach((file: File) => {
-            formData.append(key, file);
+      // Loop through form values and append them to FormData
+      Object.entries(values).forEach(([fieldName, fieldValue]) => {
+        // Handle file inputs separately
+        if (
+          Array.isArray(fieldValue) &&
+          fieldValue.some((item) => item instanceof File)
+        ) {
+          fieldValue.forEach((file, index) => {
+            formData.append(fieldName, file);
           });
-        } else {
-          formData.append(key, values[key]);
         }
-      }
+      });
 
       // Make a POST request to the server
       try {
+        // Create an AbortController instance
+        const controller = new AbortController();
+        // Get the signal from the controller
+        const signal = controller.signal;
         // Set formik submitting to true
         setSubmitting(true);
+        // Override the default timeout by setting an unlimited AbortController timeout
+        const timeoutDuration = 10800000;
+        setTimeout(() => controller.abort(), timeoutDuration);
         const response = await fetch("https://dev.cdda.io/filemanager", {
           method: "POST",
           body: formData,
+          signal,
         });
+
+        // Check if the request was aborted
+        if (signal.aborted) {
+          throw new Error("Request aborted");
+        }
+
+        // Check for successful response status
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
         const data = await response.json();
-        console.log(data);
+
+        if (response.status < 400) {
+          const newResponse = await fetch("https://dev.cdda.io/test", {
+            method: "POST",
+            body: JSON.stringify({ ...values, ...data }),
+          });
+          const nData = await newResponse.json();
+          console.log("Response from server:", nData);
+        }
         // Handle response
-      } catch (error) {
-        // Handle error
-        console.log(error);
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          console.log("Fetch request was aborted:", error);
+        } else {
+          console.error("Error occurred during fetch request:", error);
+          // Handle other errors
+        }
       }
       // Set formik submitting to false
       setSubmitting(false);
@@ -193,6 +209,7 @@ export default function Home() {
                   name={item.name}
                   label={item.label}
                   variant={item.variant || "outlined"}
+                  decimalDigits={item.decimalDigits}
                   key={i}
                 />
               );
@@ -205,6 +222,7 @@ export default function Home() {
                   name={item.name}
                   label={item.label}
                   variant={item.variant || "outlined"}
+                  decimalDigits={item.decimalDigits}
                   key={i}
                 />
               );
@@ -217,6 +235,7 @@ export default function Home() {
                   name={item.name}
                   label={item.label}
                   rows={1}
+                  decimalDigits={item.decimalDigits}
                   variant={item.variant || "outlined"}
                   key={i}
                 />
@@ -266,6 +285,18 @@ export default function Home() {
                 />
               );
 
+            case AUTOCOMPLETE:
+              return (
+                <AutoComplete
+                  key={i}
+                  formik={formik}
+                  id={item.id}
+                  name={item.name}
+                  Label={item.label}
+                  options={top100Films}
+                  multiple={true}
+                />
+              );
             default:
               return null;
           }

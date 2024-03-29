@@ -7,6 +7,7 @@ const FloatNumber = ({
   name,
   label,
   variant,
+  decimalDigits = 3, // Default to 2 decimal digits if not provided
 }: {
   formik: any;
 
@@ -14,11 +15,12 @@ const FloatNumber = ({
   name: string;
   label: string;
   variant: string;
+  decimalDigits?: number;
 }) => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     // Regex to match float number with 2 decimal places
-    const regex = /^\d*\.?\d{0,2}$/;
+    const regex = new RegExp(`^\\d*\\.?\\d{0,${decimalDigits}}$`);
     // Check if the input value matches the regex
     if (regex.test(value) || value === "") {
       formik.handleChange(event);

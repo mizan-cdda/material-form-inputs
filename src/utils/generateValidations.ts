@@ -41,8 +41,12 @@ export const generateValidations = (field: any): Yup.Schema<any> => {
     // case "file":
     case commonTypes.FILE:
       // console.log("file");
-      schema = yup.array(); // You may need to customize this for file validation
+      schema = yup.array().of(yup.mixed()); // You may need to customize this for file validation
       break;
+    // case commonTypes.FILE:
+    //   // console.log("file");
+    //   schema = yup.array(); // You may need to customize this for file validation
+    //   break;
     // case "radio":
     case commonTypes.RADIOGROUP:
       schema = yup.string(); // You may need to customize this for radio validation
@@ -75,8 +79,7 @@ export const generateValidations = (field: any): Yup.Schema<any> => {
         .test(
           "is-decimal",
           "Please enter a valid decimal number with two decimal places",
-          (value: any) =>
-            value === null ? true : /[0-9]+\.[0-9]+$/.test(value)
+          (value: any) => (value === null ? true : /^\d+\.\d{2}$/.test(value))
         );
       break;
 
@@ -90,6 +93,12 @@ export const generateValidations = (field: any): Yup.Schema<any> => {
           (value: any) =>
             value === null ? true : /^\d+(\.\d{1,2})?$/.test(value)
         );
+        break;
+
+    case commonTypes.AUTOCOMPLETE:
+      schema = yup.array();
+      break;
+
     default:
       schema = yup.string();
       break;
@@ -121,6 +130,14 @@ export const generateValidations = (field: any): Yup.Schema<any> => {
 
       case "email":
         schema = schema.email(rule.message);
+        break;
+
+      case "test":
+        schema = schema.test({
+          name: rule.name,
+          message: rule.message,
+          test: rule.value,
+        });
         break;
 
       default:

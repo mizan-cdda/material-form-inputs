@@ -6,7 +6,7 @@ export const data = [
     placeholder: "Enter your email",
     label: "Email",
     variant: "outlined", // outlined, filled, standard
-    defaultValue: "",
+    defaultValue: "mizan@cdda.io",
     validations: [
       {
         type: "required",
@@ -27,7 +27,7 @@ export const data = [
     placeholder: "Enter your number",
     label: "Number",
     variant: "outlined", // outlined, filled, standard
-    defaultValue: "",
+    defaultValue: "95866",
     validations: [
       {
         type: "required",
@@ -48,7 +48,7 @@ export const data = [
     placeholder: "Enter your message",
     label: "Message",
     variant: "outlined", // outlined, filled, standard
-    defaultValue: "",
+    defaultValue: "Hello there!",
     validations: [
       {
         type: "required",
@@ -121,7 +121,7 @@ export const data = [
       },
     ],
     row: true, // if true, checkboxes will be displayed in a row, if false, checkboxes will be displayed in a column,
-    defaultValue: [],
+    defaultValue: ["checkbox1", "checkbox2"],
     validations: [
       {
         type: "min",
@@ -175,6 +175,7 @@ export const data = [
     label: "Float Number",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "27.00",
+    decimalDigits: 2,
     validations: [
       {
         type: "required",
@@ -196,6 +197,7 @@ export const data = [
     label: "Decimal Number",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "27.00",
+    decimalDigits: 3,
     validations: [
       {
         type: "required",
@@ -217,6 +219,7 @@ export const data = [
     label: "Number With Thousand Separator",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "27,000",
+    decimalDigits: 2,
     validations: [
       {
         type: "required",
@@ -242,7 +245,7 @@ export const data = [
       {
         type: "min",
         value: 2,
-        message: "Select at least 2 files",
+        message: "Select at most two files",
       },
     ],
   },
@@ -253,7 +256,8 @@ export const data = [
     placeholder: "Enter your phone number",
     label: "Phone",
     variant: "outlined", // outlined, filled, standard
-    defaultValue: "BD",
+    defaultCountry: "BD",
+    defaultValue: "+8801313124926",
     onlyCountries: ["us", "bd"],
     validations: [
       {
@@ -268,7 +272,7 @@ export const data = [
     name: "customSwitch",
     type: "switch",
     label: "Custom Switch",
-    defaultValue: false,
+    defaultValue: true,
     variant: "android", // ios, android, ant, default
     validations: [
       {
@@ -278,4 +282,20 @@ export const data = [
       },
     ],
   },
+  // {
+  //   id: "auotcomplete",
+  //   name: "autocomplete",
+  //   type: "autocomplete",
+  //   label: "AutoComplete",
+  //   variant: "outlined",
+  //   defaultValue: [{ title: "The Shawshank Redemption", year: 1994 }],
+  //   mutliple: true,
+  //   validations: [
+  //     {
+  //       type: "min",
+  //       value: 1,
+  //       message: "Select at least one option",
+  //     },
+  //   ],
+  // },
 ];

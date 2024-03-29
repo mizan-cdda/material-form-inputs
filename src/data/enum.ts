@@ -13,5 +13,6 @@ export const all_types = {
     PHONE: "phone",
     SWITCH: "switch",
     IS_EMAIL: "email",
+    AUTOCOMPLETE : "autocomplete",
   },
 };

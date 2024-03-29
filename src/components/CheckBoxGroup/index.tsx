@@ -19,7 +19,7 @@ const CheckboxGroup = ({
   formik: any;
   name: string;
   row?: boolean;
-  options?: { value: string; label: string; disabled: boolean }[];
+  options?: { value: string; label: string; disabled?: boolean }[];
   label?: string;
   required?: boolean;
 }) => {

@@ -8,6 +8,7 @@ const DecimalNumber = ({
   label,
   variant,
   required = false,
+  decimalDigits = 2, // Default to 2 decimal digits if not provided
 }: {
   formik: any;
 
@@ -16,11 +17,12 @@ const DecimalNumber = ({
   label: string;
   variant: string;
   required?: boolean;
+  decimalDigits?: number;
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     // Regex to match decimal number
-    const regex = /^\d*\.?\d*$/;
+    const regex = new RegExp(`^\\d*\\.?\\d{0,${decimalDigits}}$`);
     // Check if the input value matches the regex
     if (regex.test(value) || value === "") {
       formik.handleChange(event);

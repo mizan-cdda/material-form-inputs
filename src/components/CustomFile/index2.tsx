@@ -57,6 +57,7 @@ const CustomFile = ({
   //   const totalFiles = files.length;
   //   let uploadedFiles = 0;
   //   let totalProgress = 0;
+  //   const responses: any[] = []; // Array to store responses
 
   //   // show file thumbnail
   //   const fileThumbnails = files.map((file) => ({
@@ -77,7 +78,6 @@ const CustomFile = ({
 
   //     xhr.upload.addEventListener("progress", (e) => {
   //       if (e.lengthComputable) {
-  //         uploadedFiles++;
   //         totalProgress += (e.loaded / e.total) * (100 / totalFiles);
   //         setProgress(totalProgress);
   //       }
@@ -85,12 +85,25 @@ const CustomFile = ({
 
   //     xhr.onreadystatechange = () => {
   //       if (xhr.readyState === XMLHttpRequest.DONE) {
+  //         uploadedFiles++;
+
   //         // Handle the completion of the upload
-  //         console.log("Upload complete");
+  //         if (uploadedFiles === totalFiles) {
+  //           // Log completion message after all uploads are done
+  //           console.log("All uploads complete");
+  //         }
+
+  //         // Handle response from the server
+  //         if (xhr.status === 200) {
+  //           const response = JSON.parse(xhr.responseText);
+  //           responses.push(response); // Store the response
+  //           // You can use the response as needed
+  //           console.log("Response from server:", response);
+  //         }
   //       }
   //     };
 
-  //     xhr.open("POST", "http://18.136.152.246:7000/filemanager", true);
+  //     xhr.open("POST", "https://dev.cdda.io/filemanager", true);
   //     xhr.send(formData);
 
   //     // Set Formik values
@@ -99,9 +112,7 @@ const CustomFile = ({
   // };
 
   const handleDelete = (index: number) => {
-    const updatedThumbnails = [...fileThumbnails];
-    const deletedFile = updatedThumbnails.splice(index, 1)[0].file;
-    setFileThumbnails(updatedThumbnails);
+    const deletedFile = formik.values[name][index];
 
     // Remove file from Formik values
     const updatedFiles = formik.values[name].filter(
@@ -141,7 +152,8 @@ const CustomFile = ({
               marginTop: "1rem",
             }}
           >
-            {fileThumbnails.map((thumbnail, index) => {
+            {formik.values?.[name].map((thumbnail: File, index: number) => {
+              const thumb = URL.createObjectURL(thumbnail);
               return (
                 <div
                   key={index}
@@ -154,11 +166,7 @@ const CustomFile = ({
                       width: "120px",
                     }}
                   >
-                    <Image
-                      src={thumbnail.thumbnail}
-                      alt={thumbnail.file.name}
-                      fill
-                    />
+                    <Image src={thumb} alt={thumbnail?.name} fill />
                   </Box>
                   {/* just a delete icon */}
                   <IconButton aria-label="delete">
@@ -181,9 +189,6 @@ const CustomFile = ({
                 <span>{Math.round(progress)}%</span>
               </div>
             )}
-            {/* {required && !formik.values[name] && (
-              <div style={{ color: "red" }}>This field is required</div>
-            )} */}
           </Box>
         </div>
       )}

@@ -43,7 +43,7 @@ const MultiSelect = ({
         {...(multiple && { multiple: true })}
         input={<OutlinedInput label="Name" />}
         // MenuProps={MenuProps}
-        value={formik.values.selectedOptions}
+        value={formik.values?.[name]}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         renderValue={(selected) =>

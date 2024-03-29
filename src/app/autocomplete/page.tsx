@@ -1,9 +1,25 @@
 "use client";
 import AutoCompleteField from "@/components/AutoComplete";
-import { Box, Divider, Stack } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import React from "react";
 
-const AutoComplete = () => {
+const AutoComplete = ({
+  options,
+  id,
+  formik,
+  name,
+  Label,
+  required,
+  multiple,
+}: {
+  options: { title: string; year: number }[];
+  id: string;
+  formik: any;
+  name: string;
+  Label: string;
+  required?: boolean;
+  multiple?: boolean;
+}) => {
   return (
     <Stack
       direction={{ xs: "column", sm: "row" }}
@@ -16,7 +32,15 @@ const AutoComplete = () => {
     >
       {/* Custom auto complete input */}
       <h2>Auto complete field</h2>
-      <AutoCompleteField />
+      <AutoCompleteField
+        id={id}
+        formik={formik}
+        label={Label}
+        name={name}
+        required={required}
+        options={options}
+        multiple={true}
+      />
     </Stack>
   );
 };
