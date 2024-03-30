@@ -96,12 +96,18 @@ export default function AutoCompleteField({
   multiple?: boolean;
 }) {
   const handleChange = (event: React.ChangeEvent<{}>, value: any) => {
-    formik.setFieldValue(name, value);
+    // console.log("value", value)
+    multiple
+      ? formik.setFieldValue(name, value)
+      : formik.setFieldValue(name, value ? [value] : []);
   };
 
   // Check if there's an error for the current field
-  const isError = formik.touched?.[name] && formik.errors?.[name];
-
+  const selectedOptions = multiple
+    ? formik.values?.[name] || [] // Initialize selected options as an array
+    : options?.find(
+        (option) => option.title === formik.values?.[name]?.[0]?.title
+      ) || null;
   return (
     <Stack spacing={3} sx={{ width: 500 }}>
       <Autocomplete
@@ -111,9 +117,8 @@ export default function AutoCompleteField({
         id={id}
         options={options}
         getOptionLabel={(option) => option.title}
-        // defaultValue={[top100Films[13]]}
         filterSelectedOptions
-        value={formik.values?.[name]}
+        value={selectedOptions}
         onChange={handleChange} // Ensure onChange is correctly defined
         isOptionEqualToValue={(option, value) => {
           return option.title === value.title && option.year === value.year;
@@ -125,11 +130,7 @@ export default function AutoCompleteField({
               name={name}
               label={label}
               placeholder={"Select " + label}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderColor: isError ? "red!important" : undefined, // Change border color to red if there's an error
-                },
-              }}
+              error={formik.touched[name] && Boolean(formik.errors[name])}
             />
             <FormHelperText
               sx={{

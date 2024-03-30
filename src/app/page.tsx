@@ -294,9 +294,10 @@ export default function Home() {
                   name={item.name}
                   Label={item.label}
                   options={top100Films}
-                  multiple={true}
+                  multiple={item.multiple}
                 />
               );
+
             default:
               return null;
           }

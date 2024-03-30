@@ -1,0 +1,29 @@
+{
+    "name": "user_name10",
+    "label": "User Name",
+    "description": "wiwqouiqwoieu",
+    "type": "Number",
+    // [ "String", "Number", "Boolean", "List", "Embedded", "Relation", "Email", "Url"]
+    "attributes": {
+        "required": true,
+        "nullable": false,
+        "number_type": "decimal",
+        // ["bigint", "smallint", "decimal", "money"]
+        "min_value": 10,
+        "choices": [
+            {
+                "value": "20",
+                "label": "20"
+            }
+        ],
+        "default": "",
+        "min_length": 12,
+        "max_length": 12,
+        "max_value": 12,
+        "max_item": 12,
+        "min_item": 12,
+        "decimal_places": 12,
+        "unique": true
+    },
+    "model": 1
+}

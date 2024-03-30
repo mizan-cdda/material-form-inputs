@@ -39,7 +39,7 @@ const AutoComplete = ({
         name={name}
         required={required}
         options={options}
-        multiple={true}
+        multiple={multiple}
       />
     </Stack>
   );

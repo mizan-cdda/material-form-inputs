@@ -282,20 +282,20 @@ export const data = [
       },
     ],
   },
-  // {
-  //   id: "auotcomplete",
-  //   name: "autocomplete",
-  //   type: "autocomplete",
-  //   label: "AutoComplete",
-  //   variant: "outlined",
-  //   defaultValue: [{ title: "The Shawshank Redemption", year: 1994 }],
-  //   mutliple: true,
-  //   validations: [
-  //     {
-  //       type: "min",
-  //       value: 1,
-  //       message: "Select at least one option",
-  //     },
-  //   ],
-  // },
+  {
+    id: "auotcomplete",
+    name: "autocomplete",
+    type: "autocomplete",
+    label: "Auto Complete Field",
+    variant: "outlined",
+    defaultValue: [{ title: "The Shawshank Redemption", year: 1994 }],
+    multiple: true,
+    validations: [
+      {
+        type: "min",
+        value: 1,
+        message: "Select at least one option",
+      },
+    ],
+  },
 ];
