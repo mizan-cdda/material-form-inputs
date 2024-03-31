@@ -1,4 +1,4 @@
-import AutoComplete from "@/app/autocomplete/page";
+import AutoComplete from "./AutoComplete";
 import CheckboxGroup from "./CheckBoxGroup";
 import TransferList from "./TransferList";
 import CustomFile from "./CustomFile/index2";

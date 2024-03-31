@@ -1,5 +1,15 @@
-import { TextField } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  TextField,
+  Tooltip,
+} from "@mui/material";
 import React from "react";
+import { LuDatabase } from "react-icons/lu";
+import EnumValues from "../EnumValues";
 
 const DecimalNumber = ({
   formik,
@@ -9,6 +19,7 @@ const DecimalNumber = ({
   variant,
   required = false,
   decimalDigits = 2, // Default to 2 decimal digits if not provided
+  choices = [],
 }: {
   formik: any;
 
@@ -18,6 +29,7 @@ const DecimalNumber = ({
   variant: string;
   required?: boolean;
   decimalDigits?: number;
+  choices?: { value: string; label: string }[];
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -29,27 +41,32 @@ const DecimalNumber = ({
     }
   };
   return (
-    <TextField
-      fullWidth
-      id={id}
-      name={name}
-      label={label}
-      type="text" // Set the type to 'text'
-      //   InputLabelProps={{
-      //     shrink: true,
-      //   }}
-      variant={variant as any | undefined}
-      value={formik.values?.[name]}
-      onChange={handleChange}
-      onBlur={formik.handleBlur}
-      error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
-      helperText={formik.touched?.[name] && formik.errors?.[name]}
-      inputProps={{
-        inputMode: "decimal",
-        pattern: "[0-9]*[.,]?[0-9]*", // Pattern to allow digits, dot, or comma
-      }}
-      // {...(required && { required: true })}
-    />
+    <Stack spacing={1} direction="row">
+      <TextField
+        fullWidth
+        id={id}
+        name={name}
+        label={label}
+        type="text" // Set the type to 'text'
+        //   InputLabelProps={{
+        //     shrink: true,
+        //   }}
+        variant={variant as any | undefined}
+        value={formik.values?.[name]}
+        onChange={handleChange}
+        onBlur={formik.handleBlur}
+        error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
+        helperText={formik.touched?.[name] && formik.errors?.[name]}
+        inputProps={{
+          inputMode: "decimal",
+          pattern: "[0-9]*[.,]?[0-9]*", // Pattern to allow digits, dot, or comma
+        }}
+        // {...(required && { required: true })}
+      />
+      {choices?.length > 0 && (
+        <EnumValues formik={formik} name={name} choices={choices} />
+      )}
+    </Stack>
   );
 };
 

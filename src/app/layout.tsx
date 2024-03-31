@@ -24,10 +24,6 @@ export default function RootLayout({
       title: "Transfer",
       href: "/transfer",
     },
-    {
-      title: "AutoComplete",
-      href: "/autocomplete",
-    },
   ];
   return (
     <html lang="en">

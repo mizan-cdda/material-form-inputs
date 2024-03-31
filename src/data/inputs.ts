@@ -197,7 +197,7 @@ export const data = [
     label: "Decimal Number",
     variant: "outlined", // outlined, filled, standard
     defaultValue: "27.00",
-    decimalDigits: 3,
+    decimalDigits: 2,
     validations: [
       {
         type: "required",
@@ -208,6 +208,20 @@ export const data = [
         type: "min",
         value: 1,
         message: "Decimal Number must be greater than 0",
+      },
+    ],
+    choices: [
+      {
+        value: "27.00",
+        label: "27.00",
+      },
+      {
+        value: "29.00",
+        label: "29.00",
+      },
+      {
+        value: "30.00",
+        label: "30.00",
       },
     ],
   },

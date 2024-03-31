@@ -3,14 +3,14 @@
     "label": "User Name",
     "description": "wiwqouiqwoieu",
     "type": "Number",
-    // [ "String", "Number", "Boolean", "List", "Embedded", "Relation", "Email", "Url"]
+    // [ "String", "Number", "Boolean", "List", "JSON", "Relation", "Email", "Url"]
     "attributes": {
         "required": true,
         "nullable": false,
         "number_type": "decimal",
         // ["bigint", "smallint", "decimal", "money"]
         "min_value": 10,
-        "choices": [
+        "choices": [ // enum value
             {
                 "value": "20",
                 "label": "20"
@@ -25,5 +25,5 @@
         "decimal_places": 12,
         "unique": true
     },
-    "model": 1
+    "model": 1 // model id (relation to model table)
 }

@@ -223,6 +223,7 @@ export default function Home() {
                   label={item.label}
                   variant={item.variant || "outlined"}
                   decimalDigits={item.decimalDigits}
+                  choices={item.choices || []}
                   key={i}
                 />
               );

@@ -1,84 +1,10 @@
-// import * as React from "react";
-// import Autocomplete from "@mui/material/Autocomplete";
-// import TextField from "@mui/material/TextField";
-// import Stack from "@mui/material/Stack";
-// import { FormHelperText } from "@mui/material";
-
-// export default function AutoCompleteField({
-//   formik,
-//   name,
-//   label,
-//   required = false,
-//   id,
-//   options = [],
-//   multiple,
-// }: {
-//   formik: any;
-//   id: string;
-//   name: string;
-//   label: string;
-//   required?: boolean;
-//   options?: { title: string; year: number }[];
-//   multiple?: boolean;
-// }) {
-//   // Check if there's an error for the current field
-//   const isError = formik.touched?.[name] && formik.errors?.[name];
-
-//   console.log("is Error", isError)
-
-//   const handleChange = (event: React.ChangeEvent<{}>, value: any) => {
-//     formik.setFieldValue(name, value);
-//   };
-//   return (
-//     <Stack spacing={3} sx={{ width: 500 }}>
-//       <Autocomplete
-//         // multiple
-//         {...(required && { required: true })}
-//         {...(multiple && { multiple: true })}
-//         id={id}
-//         options={options}
-//         getOptionLabel={(option) => option.title}
-//         // defaultValue={[top100Films[13]]}
-//         filterSelectedOptions
-//         value={formik.values?.[name]}
-//         onChange={handleChange} // Ensure onChange is correctly defined
-//         isOptionEqualToValue={(option, value) => {
-//           return option.title === value.title && option.year === value.year;
-//         }}
-//         renderInput={(params) => (
-//           <>
-//             <TextField
-//               {...params}
-//               name={name}
-//               label={label}
-//               placeholder="Favorites"
-//               sx={{
-//                 "& .MuiOutlinedInput-root": {
-//                   borderColor: isError ? "red" : undefined, // Change border color to red if there's an error
-//                 },
-//               }}
-//             />
-//             <FormHelperText
-//               sx={{
-//                 color: "red",
-//               }}
-//             >
-//               {formik.touched?.[name] && formik.errors?.[name]}
-//             </FormHelperText>
-//           </>
-//         )}
-//       />
-//     </Stack>
-//   );
-// }
-
 import * as React from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
-import { FormHelperText } from "@mui/material";
+import { Divider, FormHelperText } from "@mui/material";
 
-export default function AutoCompleteField({
+export function AutoCompleteField({
   formik,
   name,
   label,
@@ -145,3 +71,47 @@ export default function AutoCompleteField({
     </Stack>
   );
 }
+
+const AutoComplete = ({
+  options,
+  id,
+  formik,
+  name,
+  Label,
+  required,
+  multiple,
+}: {
+  options: { title: string; year: number }[];
+  id: string;
+  formik: any;
+  name: string;
+  Label: string;
+  required?: boolean;
+  multiple?: boolean;
+}) => {
+  return (
+    <Stack
+      direction={{ xs: "column", sm: "row" }}
+      useFlexGap
+      flexWrap="wrap"
+      spacing={{ xs: 1, sm: 2, md: 4 }}
+      divider={<Divider orientation="vertical" flexItem />}
+      justifyContent="center"
+      alignItems="center"
+    >
+      {/* Custom auto complete input */}
+      <h2>Auto complete field</h2>
+      <AutoCompleteField
+        id={id}
+        formik={formik}
+        label={Label}
+        name={name}
+        required={required}
+        options={options}
+        multiple={multiple}
+      />
+    </Stack>
+  );
+};
+
+export default AutoComplete;
