@@ -55,8 +55,9 @@
 
 // export default ThousandDividerInput;
 
-import { TextField } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
 import React from "react";
+import EnumValues from "../EnumValues";
 
 const ThousandDividerInput = ({
   formik,
@@ -67,6 +68,7 @@ const ThousandDividerInput = ({
   variant,
   decimalDigits = 3, // Default to 2 decimal digits if not provided
   required = false,
+  choices = [],
 }: {
   formik: any;
   id: string;
@@ -76,6 +78,7 @@ const ThousandDividerInput = ({
   variant: string;
   decimalDigits?: number;
   required?: boolean;
+  choices?: any[];
 }) => {
   const formatNumber = (value: any) => {
     // Remove non-numeric characters except dot (.)
@@ -88,7 +91,6 @@ const ThousandDividerInput = ({
       "$1"
     );
 
-    
     // Add commas for thousands
     return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
@@ -101,20 +103,25 @@ const ThousandDividerInput = ({
   };
 
   return (
-    <TextField
-      fullWidth
-      id={id}
-      name={name}
-      label={label}
-      type="text" // Set the type to 'text'
-      variant="outlined"
-      value={formik.values?.[name]}
-      onChange={handleChange} // Custom change handler
-      onBlur={formik.handleBlur}
-      error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
-      helperText={formik.touched?.[name] && formik.errors?.[name]}
-      {...(required && { required: true })}
-    />
+    <Stack spacing={1} direction="row" position="relative">
+      <TextField
+        fullWidth
+        id={id}
+        name={name}
+        label={label}
+        type="text" // Set the type to 'text'
+        variant="outlined"
+        value={formik.values?.[name]}
+        onChange={handleChange} // Custom change handler
+        onBlur={formik.handleBlur}
+        error={formik.touched?.[name] && Boolean(formik.errors?.[name])}
+        helperText={formik.touched?.[name] && formik.errors?.[name]}
+        {...(required && { required: true })}
+      />
+      {choices?.length > 0 && (
+        <EnumValues formik={formik} name={name} choices={choices} />
+      )}
+    </Stack>
   );
 };
 

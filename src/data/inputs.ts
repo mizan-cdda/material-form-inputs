@@ -19,6 +19,20 @@ export const data = [
         message: "Enter a valid email",
       },
     ],
+    choices: [
+      {
+        value: "mizan@cdda.io",
+        label: "Mizanur CDDA",
+      },
+      {
+        value: "mizanur15-911@diu.edu.bd",
+        label: "Mizanur DIU",
+      },
+      {
+        value: "imran@cdda.io",
+        label: "Imran CDDA",
+      },
+    ],
   },
   {
     id: "number",
@@ -38,6 +52,20 @@ export const data = [
         type: "min",
         value: 1,
         message: "Number must be greater than 0",
+      },
+    ],
+    choices: [
+      {
+        value: "95866",
+        label: "95866",
+      },
+      {
+        value: "95867",
+        label: "95867",
+      },
+      {
+        value: "95868",
+        label: "95868",
       },
     ],
   },
@@ -64,6 +92,20 @@ export const data = [
         type: "max",
         value: 255,
         message: "Message must be less than 255",
+      },
+    ],
+    choices: [
+      {
+        value: "Hello there!",
+        label: "Hello there!",
+      },
+      {
+        value: "How are you?",
+        label: "How are you?",
+      },
+      {
+        value: "Good Morning!",
+        label: "Good Morning!",
       },
     ],
   },
@@ -188,6 +230,20 @@ export const data = [
         message: "Float Number must be greater than 0",
       },
     ],
+    choices: [
+      {
+        value: "21.00",
+        label: "21.00",
+      },
+      {
+        value: "23.00",
+        label: "23.00",
+      },
+      {
+        value: "25.00",
+        label: "25.00",
+      },
+    ],
   },
   {
     id: "decimal-number",
@@ -241,6 +297,20 @@ export const data = [
         message: "Number with Thousand Separator is required",
       },
     ],
+    choices: [
+      {
+        value: "27,000",
+        label: "27,000",
+      },
+      {
+        value: "28,000",
+        label: "28,000",
+      },
+      {
+        value: "29,000",
+        label: "29,000",
+      },
+    ],
   },
   {
     id: "files",
@@ -278,6 +348,20 @@ export const data = [
         type: "required",
         value: true,
         message: "Phone is required",
+      },
+    ],
+    choices: [
+      {
+        value: "+8801313124926",
+        label: "+8801313124926",
+      },
+      {
+        value: "+8801313124927",
+        label: "+8801313124927",
+      },
+      {
+        value: "+8801313124928",
+        label: "+8801313124928",
       },
     ],
   },

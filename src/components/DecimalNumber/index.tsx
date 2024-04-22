@@ -1,14 +1,5 @@
-import {
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Stack,
-  TextField,
-  Tooltip,
-} from "@mui/material";
+import { Stack, TextField } from "@mui/material";
 import React from "react";
-import { LuDatabase } from "react-icons/lu";
 import EnumValues from "../EnumValues";
 
 const DecimalNumber = ({
@@ -41,7 +32,7 @@ const DecimalNumber = ({
     }
   };
   return (
-    <Stack spacing={1} direction="row">
+    <Stack spacing={1} direction="row" position="relative">
       <TextField
         fullWidth
         id={id}

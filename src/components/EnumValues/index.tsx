@@ -1,4 +1,4 @@
-import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import { Box, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import React from "react";
 import { LuDatabase } from "react-icons/lu";
 
@@ -6,10 +6,14 @@ const EnumValues = ({
   formik,
   name,
   choices,
+  top = "25%",
+  right = "1%",
 }: {
   formik: any;
   name: string;
   choices: { value: string; label: string }[];
+  top?: string;
+  right?: string;
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -21,7 +25,13 @@ const EnumValues = ({
     setAnchorEl(null);
   };
   return (
-    <div>
+    <Box
+      sx={{
+        position: "absolute",
+        top,
+        right,
+      }}
+    >
       <Tooltip
         title="Enum"
         sx={{
@@ -71,7 +81,7 @@ const EnumValues = ({
           );
         })}
       </Menu>
-    </div>
+    </Box>
   );
 };
 

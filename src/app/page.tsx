@@ -132,6 +132,7 @@ export default function Home() {
                   variant={item.variant}
                   defaultValue={String(item.defaultValue) || ""}
                   key={i}
+                  choices={item.choices || []}
                   animation={false}
                 />
               );
@@ -147,6 +148,7 @@ export default function Home() {
                   variant={item.variant}
                   defaultValue={String(item.defaultValue) || ""}
                   key={i}
+                  choices={item.choices || []}
                   animation={false}
                 />
               );
@@ -160,6 +162,7 @@ export default function Home() {
                   label={item.label}
                   rows={6}
                   variant={item.variant || "outlined"}
+                  choices={item.choices || []}
                   key={i}
                 />
               );
@@ -173,6 +176,7 @@ export default function Home() {
                   label={item.label}
                   multiple={item.multiple}
                   options={item.options || []}
+
                   key={i}
                 />
               );
@@ -210,6 +214,7 @@ export default function Home() {
                   label={item.label}
                   variant={item.variant || "outlined"}
                   decimalDigits={item.decimalDigits}
+                  choices={item.choices || []}
                   key={i}
                 />
               );
@@ -238,6 +243,7 @@ export default function Home() {
                   rows={1}
                   decimalDigits={item.decimalDigits}
                   variant={item.variant || "outlined"}
+                  choices={item.choices || []}
                   key={i}
                 />
               );
@@ -264,6 +270,7 @@ export default function Home() {
                   variant={item.variant || "outlined"}
                   defaultCountry="BD"
                   onlyCountries={["BD", "US"]}
+                  choices={item.choices || []}
                   key={i}
                 />
               );
